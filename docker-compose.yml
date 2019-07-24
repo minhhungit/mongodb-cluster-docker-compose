@@ -1,0 +1,120 @@
+version: '3'
+
+services:
+  ## Config Servers
+  config01:
+    container_name: mongo-shard-config01
+    image: mongo:4.0
+    command: mongod --port 27117 --configsvr --replSet configserver --smallfiles --dbpath /data/db
+    volumes:
+      - ./scripts:/scripts
+  config02:
+    container_name: mongo-shard-config02
+    image: mongo:4.0
+    command: mongod --port 27117 --configsvr --replSet configserver --smallfiles --dbpath /data/db
+    volumes:
+      - ./scripts:/scripts
+  config03:
+    container_name: mongo-shard-config03
+    image: mongo:4.0
+    command: mongod --port 27117 --configsvr --replSet configserver --smallfiles --dbpath /data/db
+    volumes:
+      - ./scripts:/scripts
+
+  ## Shards
+  shard01a:
+    container_name: mongo-shard-shard01a
+    image: mongo:4.0
+    command: mongod --port 27118 --shardsvr --replSet shard01 --smallfiles --dbpath /data/db
+    restart: on-failure
+    volumes:
+      - ./scripts:/scripts      
+      
+  shard01b:
+    container_name: mongo-shard-shard01b
+    image: mongo:4.0
+    command: mongod --port 27119 --shardsvr --replSet shard01 --smallfiles --dbpath /data/db
+    restart: on-failure
+    volumes:
+      - ./scripts:/scripts  
+      
+  shard01c:
+    container_name: mongo-shard-shard01c
+    image: mongo:4.0
+    command: mongod --port 27120 --shardsvr --replSet shard01 --smallfiles --dbpath /data/db
+    restart: on-failure
+    volumes:
+      - ./scripts:/scripts       
+      
+  shard02a:
+    container_name: mongo-shard-shard02a
+    image: mongo:4.0
+    command: mongod --port 27118 --shardsvr --replSet shard02 --smallfiles --dbpath /data/db
+    restart: on-failure
+    volumes:
+      - ./scripts:/scripts      
+      
+  shard02b:
+    container_name: mongo-shard-shard02b
+    image: mongo:4.0
+    command: mongod --port 27119 --shardsvr --replSet shard02 --smallfiles --dbpath /data/db
+    restart: on-failure
+    volumes:
+      - ./scripts:/scripts 
+      
+  shard02c:
+    container_name: mongo-shard-shard02c
+    image: mongo:4.0
+    command: mongod --port 27120 --shardsvr --replSet shard02 --smallfiles --dbpath /data/db
+    restart: on-failure
+    volumes:
+      - ./scripts:/scripts 
+      
+  shard03a:
+    container_name: mongo-shard-shard03a
+    image: mongo:4.0
+    command: mongod --port 27118 --shardsvr --replSet shard03 --smallfiles --dbpath /data/db
+    restart: on-failure
+    volumes:
+      - ./scripts:/scripts      
+      
+  shard03b:
+    container_name: mongo-shard-shard03b
+    image: mongo:4.0
+    command: mongod --port 27119 --shardsvr --replSet shard03 --smallfiles --dbpath /data/db
+    restart: on-failure
+    volumes:
+      - ./scripts:/scripts      
+
+  shard03c:
+    container_name: mongo-shard-shard03c
+    image: mongo:4.0
+    command: mongod --port 27120 --shardsvr --replSet shard03 --smallfiles --dbpath /data/db
+    restart: on-failure
+    volumes:
+      - ./scripts:/scripts  
+
+  ## Router
+  router:
+    container_name: mongo-shard-router
+    image: mongo:4.0
+    command: mongos --port 27117 --configdb configserver/config01:27117,config02:27117,config03:27117 --bind_ip_all
+    restart: on-failure
+    ports:
+      - "27117:27117"
+    volumes:
+      - ./scripts:/scripts
+    depends_on:
+      - config01
+      - config02
+      - config03
+      - shard01a
+      - shard01b
+      - shard01c
+      - shard02a
+      - shard02b
+      - shard02c
+      - shard03a
+      - shard03b
+      - shard03c
+      
