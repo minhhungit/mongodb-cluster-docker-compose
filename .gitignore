@@ -1,0 +1,14 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/client/.vs/DemoMongoCluster
+/client/DemoMongoClusterReader/bin/Debug/netcoreapp2.2
+/client/DemoMongoClusterReader/obj
+/client/DemoMongoClusterWriter/bin/Debug/netcoreapp2.2
+/client/DemoMongoClusterWriter/obj
+/client/MongoCluster.Messages/bin/Debug/netstandard2.0
+/client/MongoCluster.Messages/obj
+/client/DemoMongoClusterReader/bin/Release/netcoreapp2.2
+/client/DemoMongoClusterWriter/bin/Release/netcoreapp2.2
+/client/MongoCluster.Messages/bin/Release/netstandard2.0
