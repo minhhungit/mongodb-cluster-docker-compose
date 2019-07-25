@@ -13,14 +13,13 @@ Demo Mongo Sharded Cluster with Docker Compose
 ### Commands
 **Start all of the containers**
 
-```
+```sh
 docker-compose up -d
 ```
 
 **Initialize the replica sets (config servers and shards) and routers**
 
-
-```
+```sh
 docker-compose exec configsvr01 sh -c "mongo < /scripts/init-configserver.js"
 docker-compose exec shard01-a sh -c "mongo < /scripts/init-shard01.js"
 docker-compose exec shard02-a sh -c "mongo < /scripts/init-shard02.js"
@@ -29,20 +28,19 @@ docker-compose exec shard03-a sh -c "mongo < /scripts/init-shard03.js"
 
 Wait a bit for the config server and shards to elect their primaries before initializing the router
 
-```
+```sh
 docker-compose exec router01 sh -c "mongo < /scripts/init-router.js"
 ```
 
 
 **Verify the status of the sharded cluster**
 
-```
+```sh
 docker-compose exec router01 mongo --port 27017
 sh.status()
 ```
 *Sample Result:*
 ```
---- Sharding Status ---
   sharding version: {
         "_id" : 1,
         "minCompatibleVersion" : 5,
@@ -69,17 +67,17 @@ sh.status()
 
 **Enable sharding for database `MyDatabase`**
 
-```
+```sh
 sh.enableSharding("MyDatabase")
 ```
 
 **Setup shardingKey for collection `MyCollection`**
-```
+```sh
 db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { supplierId: "hashed" } } )
 ```
 
 **Check database status**
-```
+```sh
 use MyDatabase
 db.stats()
 ```
@@ -160,7 +158,7 @@ db.stats()
 
 **More commands**
 
-```
+```sh
 docker exec -it rydell-mongo-config-01 bash -c "echo 'rs.status()' | mongo --port 27017"
 
 docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
@@ -173,12 +171,12 @@ The cluster only has to be initialized on the first run. Subsequent startup can 
 ### Resetting the Cluster
 To remove all data and re-initialize the cluster, make sure the containers are stopped and then:
 
-```
+```sh
 docker-compose rm
 ```
 
 ### Clean up docker-compose
-```
+```sh
 docker-compose down -v --rmi all --remove-orphans
 ```
 
