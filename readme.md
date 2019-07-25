@@ -47,7 +47,7 @@ sh.status()
         "_id" : 1,
         "minCompatibleVersion" : 5,
         "currentVersion" : 6,
-        "clusterId" : ObjectId("5d38d09966353d487d4e1620")
+        "clusterId" : ObjectId("5d38fb010eac1e03397c355a")
   }
   shards:
         {  "_id" : "rs-shard-01",  "host" : "rs-shard-01/shard01-a:27017,shard01-b:27017,shard01-c:27017",  "state" : 1 }
@@ -65,13 +65,6 @@ sh.status()
                 No recent migrations
   databases:
         {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
-                config.system.sessions
-                        shard key: { "_id" : 1 }
-                        unique: false
-                        balancing: true
-                        chunks:
-                                rs-shard-01     1
-                        { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : rs-shard-01 Timestamp(1, 0)
 ```
 
 **Enable sharding for database `MyDatabase`**
@@ -176,13 +169,6 @@ docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.status()' | mongo --por
 
 ### Normal Startup
 The cluster only has to be initialized on the first run. Subsequent startup can be achieved simply with `docker-compose up` or `docker-compose up -d`
-
-### Accessing the Mongo Shell
-Its as simple as:
-
-```
-docker-compose exec router01 mongo
-```
 
 ### Resetting the Cluster
 To remove all data and re-initialize the cluster, make sure the containers are stopped and then:

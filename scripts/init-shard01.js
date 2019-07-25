@@ -1,11 +1,11 @@
 rs.initiate(
    {
-      _id: "shard01",
+      _id: "rs-shard-01",
       version: 1,
       members: [
-         { _id: 0, host : "shard01a:27118" },
-         { _id: 1, host : "shard01b:27119" },
-		 { _id: 2, host : "shard01c:27120" },
+         { _id: 0, host : "shard01-a:27017" },
+         { _id: 1, host : "shard01-b:27017" },
+		 { _id: 2, host : "shard01-c:27017" },
       ]
    }
 )
