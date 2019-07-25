@@ -171,9 +171,9 @@ Sample Result:
 ** More commands
 
 ```
-docker exec -it mongo-shard-config01 bash -c "echo 'rs.status()' | mongo --port 27017"
+docker exec -it rydell-mongo-config-01 bash -c "echo 'rs.status()' | mongo --port 27017"
 
-docker exec -it mongo-shard-shard01a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
 ```
 
 
@@ -184,7 +184,7 @@ The cluster only has to be initialized on the first run. Subsequent startup can 
 Its as simple as:
 
 ```
-docker-compose exec router mongo
+docker-compose exec router01 mongo
 ```
 
 ### Resetting the Cluster
@@ -200,3 +200,9 @@ docker-compose down -v --rmi all --remove-orphans
 ```
 
 Execute the **First Run** instructions again.
+
+### Screenshot
+
+<img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/demo.png" style="width: 100%;" />
+<img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/demo-03.png" style="width: 100%;" />
+<img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/demo-02.png" style="width: 100%;" />
