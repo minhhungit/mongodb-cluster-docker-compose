@@ -1,10 +1,6 @@
 Demo Mongo Sharded Cluster with Docker Compose
 =========================================
 
-Inspired by:
-- https://github.com/jfollenfant/mongodb-sharding-docker-compose
-- https://viblo.asia/p/cai-dat-mongo-cluster-voi-docker-m68Z0NN25kG
-
 ### Mongo Components
 
 * Config Server (3 member replica set): `configsvr01`,`configsvr02`,`configsvr03`
@@ -44,7 +40,7 @@ docker-compose exec router01 sh -c "mongo < /scripts/init-router.js"
 docker-compose exec router01 mongo --port 27017
 sh.status()
 ```
-Sample Result:
+*Sample Result:*
 ```
 --- Sharding Status ---
   sharding version: {
@@ -78,23 +74,24 @@ Sample Result:
                         { "_id" : { "$minKey" : 1 } } -->> { "_id" : { "$maxKey" : 1 } } on : rs-shard-01 Timestamp(1, 0)
 ```
 
-**Enable sharding for database `MyDatabase`
+**Enable sharding for database `MyDatabase`**
 
 ```
 sh.enableSharding("MyDatabase")
 ```
 
-**Setup shardingKey for collection `MyCollection`
+**Setup shardingKey for collection `MyCollection`**
 ```
 db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { supplierId: "hashed" } } )
 ```
 
-**Check database status 
+**Check database status**
 ```
 use MyDatabase
 db.stats()
 ```
-Sample Result:
+
+*Sample Result:*
 ```
 {
         "raw" : {
@@ -168,7 +165,7 @@ Sample Result:
 }
 ```
 
-** More commands
+**More commands**
 
 ```
 docker exec -it rydell-mongo-config-01 bash -c "echo 'rs.status()' | mongo --port 27017"
@@ -206,3 +203,8 @@ Execute the **First Run** instructions again.
 <img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/demo.png" style="width: 100%;" />
 <img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/demo-03.png" style="width: 100%;" />
 <img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/demo-02.png" style="width: 100%;" />
+
+---
+#### Inspired by:
+- https://github.com/jfollenfant/mongodb-sharding-docker-compose
+- https://viblo.asia/p/cai-dat-mongo-cluster-voi-docker-m68Z0NN25kG
