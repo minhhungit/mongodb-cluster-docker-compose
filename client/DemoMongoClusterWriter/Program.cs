@@ -9,9 +9,10 @@ namespace DemoMongoClusterWriter
     {
         static void Main(string[] args)
         {
-            var client = new MongoClient("mongodb://127.0.0.1:27117");
+            var dbName = "MyDatabase";
+            var client = new MongoClient($"mongodb://127.0.0.1:27117,127.0.0.1:27118/{dbName}");
 
-            var database = client.GetDatabase("MyDatabase");
+            var database = client.GetDatabase(dbName);
             var collection = database.GetCollection<User>("MyCollection");
 
             for (int i = 1; i < 1001; i++)
