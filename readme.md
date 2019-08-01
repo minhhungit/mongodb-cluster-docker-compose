@@ -1,6 +1,9 @@
 Demo Mongo Sharded Cluster with Docker Compose
 =========================================
 
+> Note: this demo is `PSSA`, again, it's just for demo
+> `PSA` or `PSS` is your choose, read more at here: https://developpaper.com/do-not-tread-on-pits-1-mongodb-pss-vs-psa/
+
 ### Mongo Components
 
 * Config Server (3 member replica set): `configsvr01`,`configsvr02`,`configsvr03`
