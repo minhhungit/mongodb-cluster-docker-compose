@@ -2,6 +2,9 @@ Demo Mongo Sharded Cluster with Docker Compose
 =========================================
 
 ## PSA Style (Primary - Secondary - Arbiter)
+
+Need PSS? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-compose)
+
 ---
 
 ### Mongo Components
