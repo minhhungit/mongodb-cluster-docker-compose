@@ -11,13 +11,13 @@ Demo Mongo Sharded Cluster with Docker Compose
 * 2 Routers (mongos): `router01`, `router02`
 
 ### Setup
-**Step 1: Start all of the containers**
+- **Step 1: Start all of the containers**
 
 ```bash
 docker-compose up -d
 ```
 
-**Step 2: Initialize the replica sets (config servers and shards) and routers**
+- **Step 2: Initialize the replica sets (config servers and shards) and routers**
 
 ```bash
 docker-compose exec configsvr01 sh -c "mongo < /scripts/init-configserver.js"
@@ -27,7 +27,7 @@ docker-compose exec shard02-a sh -c "mongo < /scripts/init-shard02.js"
 docker-compose exec shard03-a sh -c "mongo < /scripts/init-shard03.js"
 ```
 
-**Step 3: Connect to the primary and add arbiters**
+- **Step 3: Connect to the primary and add arbiters**
 ```bash
 docker-compose exec shard01-a mongo --port 27017
 rs.addArb("shard01-x:27017") // make sure that you are in primary before run this command
@@ -49,14 +49,14 @@ rs.addArb("shard03-x:27017") // make sure that you are in primary before run thi
 docker exec -it rydell-shard-03-node-a bash -c "echo 'rs.addArb(\""shard03-x:27017\"")' | mongo --port 27017"
 ```
 
-**Step 4: Initializing the router**
+- **Step 4: Initializing the router**
 >Note: Wait a bit for the config server and shards to elect their primaries before initializing the router
 
 ```bash
 docker-compose exec router01 sh -c "mongo < /scripts/init-router.js"
 ```
 
-**Step 5: Enable sharding and setup sharding-key**
+- **Step 5: Enable sharding and setup sharding-key**
 ```bash
 docker-compose exec router01 mongo --port 27017
 
@@ -75,7 +75,7 @@ db.stats()
 
 ### Verify
 
-**Verify the status of the sharded cluster**
+- **Verify the status of the sharded cluster**
 
 ```bash
 docker-compose exec router01 mongo --port 27017
@@ -107,7 +107,7 @@ sh.status()
         {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
 ```
 
-**Verify status of replica set for each shard**
+- **Verify status of replica set for each shard**
 > You should see 1 PRIMARY, 2 SECONDARY and 1 ARBITER
 
 ```bash
@@ -268,7 +268,7 @@ MongoDB server version: 4.0.11
 bye
 ```
 
-**Check database status**
+- **Check database status**
 ```bash
 docker-compose exec router01 mongo --port 27017
 use MyDatabase
@@ -350,7 +350,7 @@ db.MyCollection.getShardDistribution()
 }
 ```
 
-**More commands**
+### More commands
 
 ```bash
 docker exec -it rydell-mongo-config-01 bash -c "echo 'rs.status()' | mongo --port 27017"
@@ -362,6 +362,7 @@ docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.printReplicationInfo()'
 docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.printSlaveReplicationInfo()' | mongo --port 27017"
 ```
 
+---
 
 ### Normal Startup
 The cluster only has to be initialized on the first run. Subsequent startup can be achieved simply with `docker-compose up` or `docker-compose up -d`
