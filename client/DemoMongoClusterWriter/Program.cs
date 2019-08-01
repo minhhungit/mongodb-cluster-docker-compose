@@ -19,9 +19,9 @@ namespace DemoMongoClusterWriter
             var collection = database.GetCollection<User>("MyCollection");
 
             var id = 0;
-            var nbrRecordsInBatch = 50_000;
+            var nbrRecordsInBatch = 10_000;
             Stopwatch stopwatch = Stopwatch.StartNew();
-            for (int times = 0; times < 10000; times ++)
+            for (int times = 0; times < 10; times ++)
             {
                 Stopwatch stopwatchPart = Stopwatch.StartNew();
                 List<User> requests = new List<User>();

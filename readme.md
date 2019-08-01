@@ -80,6 +80,7 @@ db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { supplierId
 ```sh
 use MyDatabase
 db.stats()
+db.MyCollection.getShardDistribution()
 ```
 
 *Sample Result:*

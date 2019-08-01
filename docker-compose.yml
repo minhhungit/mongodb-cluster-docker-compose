@@ -1,6 +1,26 @@
 version: '2'
 services:
 
+## Router
+  router01:
+    image: mongo:4.0
+    container_name: rydell-router-01
+    command: mongos --port 27017 --configdb rs-config-server/configsvr01:27017,configsvr02:27017,configsvr03:27017 --bind_ip_all
+    ports:
+      - 27117:27017
+    volumes:
+      - ./scripts:/scripts
+  router02:
+    image: mongo:4.0
+    container_name: rydell-router-02
+    command: mongos --port 27017 --configdb rs-config-server/configsvr01:27017,configsvr02:27017,configsvr03:27017 --bind_ip_all
+    volumes:
+      - ./scripts:/scripts
+    ports:
+      - 27118:27017
+    links:
+      - router01
+
   ## Config Servers
   configsvr01:
     image: mongo:4.0
@@ -120,22 +140,4 @@ services:
     ports:
       - 27130:27017
 
-  ## Router
-  router01:
-    image: mongo:4.0
-    container_name: rydell-router-01
-    command: mongos --port 27017 --configdb rs-config-server/configsvr01:27017,configsvr02:27017,configsvr03:27017 --bind_ip_all
-    ports:
-      - 27117:27017
-    volumes:
-      - ./scripts:/scripts
-  router02:
-    image: mongo:4.0
-    container_name: rydell-router-02
-    command: mongos --port 27017 --configdb rs-config-server/configsvr01:27017,configsvr02:27017,configsvr03:27017 --bind_ip_all
-    volumes:
-      - ./scripts:/scripts
-    ports:
-      - 27118:27017
-    links:
-      - router01
+  
