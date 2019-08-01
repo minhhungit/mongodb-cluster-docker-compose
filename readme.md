@@ -3,6 +3,8 @@ Demo Mongo Sharded Cluster with Docker Compose
 
 ### PSS Style (Primary -Secondary - Secondary)
 
+Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/PSA)
+
 ---
 
 ### Mongo Components
