@@ -1,17 +1,16 @@
 Demo Mongo Sharded Cluster with Docker Compose
 =========================================
 
-### PSS Style (Primary -Secondary - Secondary)
-
+## PSA Style (Primary - Secondary - Arbiter)
 ---
 
 ### Mongo Components
 
 * Config Server (3 member replica set): `configsvr01`,`configsvr02`,`configsvr03`
-* 3 Shards (each a 3 member `PSS` replica set):
-	* `shard01-a`,`shard01-b`, `shard01-c`
-	* `shard02-a`,`shard02-b`, `shard02-c`
-	* `shard03-a`,`shard03-b`, `shard03-c`
+* 3 Shards (each a 3 member `PSA` replica set):
+	* `shard01-a`,`shard01-b` and 1 arbiter `shard01-x`
+	* `shard02-a`,`shard02-b` and 1 arbiter `shard02-x`
+	* `shard03-a`,`shard03-b` and 1 arbiter `shard03-x`
 * 2 Routers (mongos): `router01`, `router02`
 
 ### Setup
@@ -31,14 +30,36 @@ docker-compose exec shard02-a sh -c "mongo < /scripts/init-shard02.js"
 docker-compose exec shard03-a sh -c "mongo < /scripts/init-shard03.js"
 ```
 
-- **Step 3: Initializing the router**
+- **Step 3: Connect to the primary and add arbiters**
+```bash
+docker-compose exec shard01-a mongo --port 27017
+rs.addArb("shard01-x:27017") // make sure that you are in primary before run this command
+// or
+docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.addArb(\""shard01-x:27017\"")' | mongo --port 27017"
+```
+
+```bash
+docker-compose exec shard02-a mongo --port 27017
+rs.addArb("shard02-x:27017") // make sure that you are in primary before run this command
+// or
+docker exec -it rydell-shard-02-node-a bash -c "echo 'rs.addArb(\""shard02-x:27017\"")' | mongo --port 27017"
+```
+
+```bash
+docker-compose exec shard03-a mongo --port 27017
+rs.addArb("shard03-x:27017") // make sure that you are in primary before run this command
+// or
+docker exec -it rydell-shard-03-node-a bash -c "echo 'rs.addArb(\""shard03-x:27017\"")' | mongo --port 27017"
+```
+
+- **Step 4: Initializing the router**
 >Note: Wait a bit for the config server and shards to elect their primaries before initializing the router
 
 ```bash
 docker-compose exec router01 sh -c "mongo < /scripts/init-router.js"
 ```
 
-- **Step 4: Enable sharding and setup sharding-key**
+- **Step 5: Enable sharding and setup sharding-key**
 ```bash
 docker-compose exec router01 mongo --port 27017
 
@@ -69,9 +90,9 @@ sh.status()
         "clusterId" : ObjectId("5d38fb010eac1e03397c355a")
   }
   shards:
-        {  "_id" : "rs-shard-01",  "host" : "rs-shard-01/shard01-a:27017,shard01-b:27017,shard01-c:27017",  "state" : 1 }
-        {  "_id" : "rs-shard-02",  "host" : "rs-shard-02/shard02-a:27017,shard02-b:27017,shard02-c:27017",  "state" : 1 }
-        {  "_id" : "rs-shard-03",  "host" : "rs-shard-03/shard03-a:27017,shard03-b:27017,shard03-c:27017",  "state" : 1 }
+        {  "_id" : "rs-shard-01",  "host" : "rs-shard-01/shard01-a:27017,shard01-b:27017",  "state" : 1 }
+        {  "_id" : "rs-shard-02",  "host" : "rs-shard-02/shard02-a:27017,shard02-b:27017",  "state" : 1 }
+        {  "_id" : "rs-shard-03",  "host" : "rs-shard-03/shard03-a:27017,shard03-b:27017",  "state" : 1 }
   active mongoses:
         "4.0.10" : 2
   autosplit:
@@ -87,7 +108,7 @@ sh.status()
 ```
 
 - **Verify status of replica set for each shard**
-> You should see 1 PRIMARY, 2 SECONDARY
+> You should see 1 PRIMARY, 1 SECONDARY and 1 ARBITER
 
 ```bash
 docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
@@ -179,29 +200,19 @@ MongoDB server version: 4.0.11
                         "configVersion" : 2
                 },
                 {
-                        "_id" : 2,
-                        "name" : "shard01-c:27017",
+                        "_id" : 3,
+                        "name" : "shard01-x:27017",
                         "health" : 1,
-                        "state" : 2,
-                        "stateStr" : "SECONDARY",
-                        "uptime" : 142,
-                        "optime" : {
-                                "ts" : Timestamp(1564642428, 1),
-                                "t" : NumberLong(1)
-                        },
-                        "optimeDurable" : {
-                                "ts" : Timestamp(1564642428, 1),
-                                "t" : NumberLong(1)
-                        },
-                        "optimeDate" : ISODate("2019-08-01T06:53:48Z"),
-                        "optimeDurableDate" : ISODate("2019-08-01T06:53:48Z"),
-                        "lastHeartbeat" : ISODate("2019-08-01T06:53:57.952Z"),
-                        "lastHeartbeatRecv" : ISODate("2019-08-01T06:53:57.968Z"),
+                        "state" : 7,
+                        "stateStr" : "ARBITER",
+                        "uptime" : 99,
+                        "lastHeartbeat" : ISODate("2019-08-01T06:53:57.957Z"),
+                        "lastHeartbeatRecv" : ISODate("2019-08-01T06:53:58.017Z"),
                         "pingMs" : NumberLong(0),
                         "lastHeartbeatMessage" : "",
-                        "syncingTo" : "shard01-a:27017",
-                        "syncSourceHost" : "shard01-a:27017",
-                        "syncSourceId" : 0,
+                        "syncingTo" : "",
+                        "syncSourceHost" : "",
+                        "syncSourceId" : -1,
                         "infoMessage" : "",
                         "configVersion" : 2
                 }
@@ -242,7 +253,7 @@ db.MyCollection.getShardDistribution()
 ```
 {
         "raw" : {
-                "rs-shard-01/shard01-a:27017,shard01-b:27017,shard01-c:27017" : {
+                "rs-shard-01/shard01-a:27017,shard01-b:27017" : {
                         "db" : "MyDatabase",
                         "collections" : 1,
                         "views" : 0,
@@ -257,7 +268,7 @@ db.MyCollection.getShardDistribution()
                         "fsTotalSize" : 62725787648,
                         "ok" : 1
                 },
-                "rs-shard-03/shard03-a:27017,shard03-b:27017,shard03-c:27017" : {
+                "rs-shard-03/shard03-a:27017,shard03-b:27017" : {
                         "db" : "MyDatabase",
                         "collections" : 1,
                         "views" : 0,
@@ -272,7 +283,7 @@ db.MyCollection.getShardDistribution()
                         "fsTotalSize" : 62725787648,
                         "ok" : 1
                 },
-                "rs-shard-02/shard02-a:27017,shard02-b:27017,shard02-c:27017" : {
+                "rs-shard-02/shard02-a:27017,shard02-b:27017" : {
                         "db" : "MyDatabase",
                         "collections" : 1,
                         "views" : 0,
