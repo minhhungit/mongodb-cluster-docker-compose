@@ -1,4 +1,5 @@
 ﻿using MongoCluster.Messages;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 
@@ -18,8 +19,8 @@ namespace DemoMongoClusterReader
             {
                 try
                 {
-                    var users = collection.Find(Builders<User>.Filter.Empty).ToListAsync().GetAwaiter().GetResult();
-                    Console.WriteLine($"{users.Count} - {Guid.NewGuid()}");
+                    double totalDocuments = collection.CountAsync(FilterDefinition<User>.Empty).GetAwaiter().GetResult();
+                    Console.WriteLine($"Total Records: {totalDocuments} - {Guid.NewGuid()}");
                 }
                 catch (MongoConnectionException mgConnEx)
                 {
@@ -35,7 +36,7 @@ namespace DemoMongoClusterReader
                     Console.WriteLine($"{ Guid.NewGuid()} - { ex.Message}");
                 }
 
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(500);
             }
 
 
