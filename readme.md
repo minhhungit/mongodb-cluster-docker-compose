@@ -1,9 +1,9 @@
 Demo Mongo Sharded Cluster with Docker Compose
 =========================================
 
-> Note: this demo is `PSSA`, again, it's just for demo
+>Note: this demo is `PSSA`, again, it's just for demo
 >
-> `PSA` or `PSS` is your choose, read more at here: https://developpaper.com/do-not-tread-on-pits-1-mongodb-pss-vs-psa/
+>`PSA` or `PSS` is your choose, read more at [here - MongoDB PSS vs PSA](https://developpaper.com/do-not-tread-on-pits-1-mongodb-pss-vs-psa/)
 
 ### Mongo Components
 
