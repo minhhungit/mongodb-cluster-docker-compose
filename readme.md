@@ -5,33 +5,75 @@ Demo Mongo Sharded Cluster with Docker Compose
 
 * Config Server (3 member replica set): `configsvr01`,`configsvr02`,`configsvr03`
 * 3 Shards (each a 3 member replica set):
-	* `shard01-a`,`shard01-b`, `shard01-c`
-	* `shard02-a`,`shard02-b`, `shard02-c`
-	* `shard03-a`,`shard03-b`, `shard03-c`
+	* `shard01-a`,`shard01-b`, `shard01-c` and 1 arbiter `shard01-x`
+	* `shard02-a`,`shard02-b`, `shard02-c` and 1 arbiter `shard02-x`
+	* `shard03-a`,`shard03-b`, `shard03-c` and 1 arbiter `shard03-x`
 * 2 Routers (mongos): `router01`, `router02`
 
-### Commands
-**Start all of the containers**
+### Setup
+**Step 1: Start all of the containers**
 
 ```sh
 docker-compose up -d
 ```
 
-**Initialize the replica sets (config servers and shards) and routers**
+**Step 2: Initialize the replica sets (config servers and shards) and routers**
 
 ```sh
 docker-compose exec configsvr01 sh -c "mongo < /scripts/init-configserver.js"
+
 docker-compose exec shard01-a sh -c "mongo < /scripts/init-shard01.js"
 docker-compose exec shard02-a sh -c "mongo < /scripts/init-shard02.js"
 docker-compose exec shard03-a sh -c "mongo < /scripts/init-shard03.js"
 ```
 
-Wait a bit for the config server and shards to elect their primaries before initializing the router
+**Step 3: Connect to the primary and add arbiters**
+```sh
+docker-compose exec shard01-a mongo --port 27017
+rs.addArb("shard01-x:27017") // make sure that you are in primary before run this command
+// or
+docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.addArb(\""shard01-x:27017\"")' | mongo --port 27017"
+```
+
+```sh
+docker-compose exec shard02-a mongo --port 27017
+rs.addArb("shard02-x:27017") // make sure that you are in primary before run this command
+// or
+docker exec -it rydell-shard-02-node-a bash -c "echo 'rs.addArb(\""shard02-x:27017\"")' | mongo --port 27017"
+```
+
+```sh
+docker-compose exec shard03-a mongo --port 27017
+rs.addArb("shard03-x:27017") // make sure that you are in primary before run this command
+// or
+docker exec -it rydell-shard-03-node-a bash -c "echo 'rs.addArb(\""shard03-x:27017\"")' | mongo --port 27017"
+```
+
+**Step 4: Initializing the router**
+>Note: Wait a bit for the config server and shards to elect their primaries before initializing the router
 
 ```sh
 docker-compose exec router01 sh -c "mongo < /scripts/init-router.js"
 ```
 
+**Step 5: Enable sharding and setup sharding-key**
+```sh
+docker-compose exec router01 mongo --port 27017
+
+// Enable sharding for database `MyDatabase`
+sh.enableSharding("MyDatabase")
+
+// Setup shardingKey for collection `MyCollection`**
+db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { supplierId: "hashed" } } )
+
+// verify
+use MyDatabase
+db.stats()
+```
+
+>Done! but before you start inserting data you should verify them first
+
+### Verify
 
 **Verify the status of the sharded cluster**
 
@@ -65,19 +107,170 @@ sh.status()
         {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
 ```
 
-**Enable sharding for database `MyDatabase`**
+** Verify status of replica set for each shard**
+> You should see 1 PRIMARY, 2 SECONDARY and 1 ARBITER
 
 ```sh
-sh.enableSharding("MyDatabase")
+docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it rydell-shard-02-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it rydell-shard-03-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
 ```
-
-**Setup shardingKey for collection `MyCollection`**
-```sh
-db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { supplierId: "hashed" } } )
+*Sample Result:*
+```
+MongoDB shell version v4.0.11
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("dcfe5d8f-75ef-45f7-9595-9d72dc8a81fc") }
+MongoDB server version: 4.0.11
+{
+        "set" : "rs-shard-01",
+        "date" : ISODate("2019-08-01T06:53:59.175Z"),
+        "myState" : 1,
+        "term" : NumberLong(1),
+        "syncingTo" : "",
+        "syncSourceHost" : "",
+        "syncSourceId" : -1,
+        "heartbeatIntervalMillis" : NumberLong(2000),
+        "optimes" : {
+                "lastCommittedOpTime" : {
+                        "ts" : Timestamp(1564642438, 1),
+                        "t" : NumberLong(1)
+                },
+                "readConcernMajorityOpTime" : {
+                        "ts" : Timestamp(1564642438, 1),
+                        "t" : NumberLong(1)
+                },
+                "appliedOpTime" : {
+                        "ts" : Timestamp(1564642438, 1),
+                        "t" : NumberLong(1)
+                },
+                "durableOpTime" : {
+                        "ts" : Timestamp(1564642438, 1),
+                        "t" : NumberLong(1)
+                }
+        },
+        "lastStableCheckpointTimestamp" : Timestamp(1564642428, 1),
+        "members" : [
+                {
+                        "_id" : 0,
+                        "name" : "shard01-a:27017",
+                        "health" : 1,
+                        "state" : 1,
+                        "stateStr" : "PRIMARY",
+                        "uptime" : 390,
+                        "optime" : {
+                                "ts" : Timestamp(1564642438, 1),
+                                "t" : NumberLong(1)
+                        },
+                        "optimeDate" : ISODate("2019-08-01T06:53:58Z"),
+                        "syncingTo" : "",
+                        "syncSourceHost" : "",
+                        "syncSourceId" : -1,
+                        "infoMessage" : "",
+                        "electionTime" : Timestamp(1564642306, 1),
+                        "electionDate" : ISODate("2019-08-01T06:51:46Z"),
+                        "configVersion" : 2,
+                        "self" : true,
+                        "lastHeartbeatMessage" : ""
+                },
+                {
+                        "_id" : 1,
+                        "name" : "shard01-b:27017",
+                        "health" : 1,
+                        "state" : 2,
+                        "stateStr" : "SECONDARY",
+                        "uptime" : 142,
+                        "optime" : {
+                                "ts" : Timestamp(1564642428, 1),
+                                "t" : NumberLong(1)
+                        },
+                        "optimeDurable" : {
+                                "ts" : Timestamp(1564642428, 1),
+                                "t" : NumberLong(1)
+                        },
+                        "optimeDate" : ISODate("2019-08-01T06:53:48Z"),
+                        "optimeDurableDate" : ISODate("2019-08-01T06:53:48Z"),
+                        "lastHeartbeat" : ISODate("2019-08-01T06:53:57.953Z"),
+                        "lastHeartbeatRecv" : ISODate("2019-08-01T06:53:57.967Z"),
+                        "pingMs" : NumberLong(0),
+                        "lastHeartbeatMessage" : "",
+                        "syncingTo" : "shard01-a:27017",
+                        "syncSourceHost" : "shard01-a:27017",
+                        "syncSourceId" : 0,
+                        "infoMessage" : "",
+                        "configVersion" : 2
+                },
+                {
+                        "_id" : 2,
+                        "name" : "shard01-c:27017",
+                        "health" : 1,
+                        "state" : 2,
+                        "stateStr" : "SECONDARY",
+                        "uptime" : 142,
+                        "optime" : {
+                                "ts" : Timestamp(1564642428, 1),
+                                "t" : NumberLong(1)
+                        },
+                        "optimeDurable" : {
+                                "ts" : Timestamp(1564642428, 1),
+                                "t" : NumberLong(1)
+                        },
+                        "optimeDate" : ISODate("2019-08-01T06:53:48Z"),
+                        "optimeDurableDate" : ISODate("2019-08-01T06:53:48Z"),
+                        "lastHeartbeat" : ISODate("2019-08-01T06:53:57.952Z"),
+                        "lastHeartbeatRecv" : ISODate("2019-08-01T06:53:57.968Z"),
+                        "pingMs" : NumberLong(0),
+                        "lastHeartbeatMessage" : "",
+                        "syncingTo" : "shard01-a:27017",
+                        "syncSourceHost" : "shard01-a:27017",
+                        "syncSourceId" : 0,
+                        "infoMessage" : "",
+                        "configVersion" : 2
+                },
+                {
+                        "_id" : 3,
+                        "name" : "shard01-x:27017",
+                        "health" : 1,
+                        "state" : 7,
+                        "stateStr" : "ARBITER",
+                        "uptime" : 99,
+                        "lastHeartbeat" : ISODate("2019-08-01T06:53:57.957Z"),
+                        "lastHeartbeatRecv" : ISODate("2019-08-01T06:53:58.017Z"),
+                        "pingMs" : NumberLong(0),
+                        "lastHeartbeatMessage" : "",
+                        "syncingTo" : "",
+                        "syncSourceHost" : "",
+                        "syncSourceId" : -1,
+                        "infoMessage" : "",
+                        "configVersion" : 2
+                }
+        ],
+        "ok" : 1,
+        "operationTime" : Timestamp(1564642438, 1),
+        "$gleStats" : {
+                "lastOpTime" : Timestamp(0, 0),
+                "electionId" : ObjectId("7fffffff0000000000000001")
+        },
+        "lastCommittedOpTime" : Timestamp(1564642438, 1),
+        "$configServerState" : {
+                "opTime" : {
+                        "ts" : Timestamp(1564642426, 2),
+                        "t" : NumberLong(1)
+                }
+        },
+        "$clusterTime" : {
+                "clusterTime" : Timestamp(1564642438, 1),
+                "signature" : {
+                        "hash" : BinData(0,"AAAAAAAAAAAAAAAAAAAAAAAAAAA="),
+                        "keyId" : NumberLong(0)
+                }
+        }
+}
+bye
 ```
 
 **Check database status**
 ```sh
+docker-compose exec router01 mongo --port 27017
 use MyDatabase
 db.stats()
 db.MyCollection.getShardDistribution()
@@ -162,7 +355,11 @@ db.MyCollection.getShardDistribution()
 ```sh
 docker exec -it rydell-mongo-config-01 bash -c "echo 'rs.status()' | mongo --port 27017"
 
+
+docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.help()' | mongo --port 27017"
 docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.printReplicationInfo()' | mongo --port 27017" 
+docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.printSlaveReplicationInfo()' | mongo --port 27017"
 ```
 
 
