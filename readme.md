@@ -16,7 +16,7 @@ Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-comp
 >and related [jira.mongodb.org bug](https://jira.mongodb.org/browse/SERVER-8600)). 
 >This means that it is not possible to run a MongoDB container with the data directory mapped to the host.
 >
->&#8211; Docker Hub ([source here](https://github.com/docker->library/docs/blob/b78d49c9dffe5dd8b3ffd1db338c62b9e1fc3db8/mongo/content.md#where-to-store-data) 
+>&#8211; Docker Hub ([source here](https://github.com/docker-library/docs/blob/b78d49c9dffe5dd8b3ffd1db338c62b9e1fc3db8/mongo/content.md#where-to-store-data) 
 >or [here](https://github.com/docker-library/mongo/issues/232#issuecomment-355423692))
 ---
 
