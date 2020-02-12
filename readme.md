@@ -16,6 +16,8 @@ Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-comp
 	* `shard03-a`,`shard03-b`, `shard03-c`
 * 2 Routers (mongos): `router01`, `router02`
 
+<img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/sharding-and-replica-sets.png" style="width: 100%;" />
+
 ### Setup
 - **Step 1: Start all of the containers**
 
