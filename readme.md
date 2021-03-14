@@ -38,6 +38,14 @@ Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-comp
 docker-compose up -d
 ```
 
+If you get error "docker.errors.DockerException: Error while fetching server API version" and 
+used WSL (Windows Subsystem for Linux) need to enable 'WSL Integration' for required distro 
+in Windows Docker Desktop (Settings -> Resources-> WSL Integration -> Enable integration with required distros).
+
+<img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/wsl2.png" style="width: 100%;" />
+
+Link: https://stackoverflow.com/a/65347214/3007147
+
 - **Step 2: Initialize the replica sets (config servers and shards) and routers**
 
 ```bash
@@ -47,6 +55,14 @@ docker-compose exec shard01-a sh -c "mongo < /scripts/init-shard01.js"
 docker-compose exec shard02-a sh -c "mongo < /scripts/init-shard02.js"
 docker-compose exec shard03-a sh -c "mongo < /scripts/init-shard03.js"
 ```
+
+If you get error like "E QUERY    [thread1] SyntaxError: unterminated string literal @(shellhelp2)", problem maybe due to:
+
+>On Unix, you will get this error if your script has Dos/Windows end of lines (CRLF) instead of Unix end of lines (LF).
+
+To fix it, modify script files in `scripts` folder, remove newline, change multi line to one line
+
+Link: https://stackoverflow.com/a/51728442/3007147
 
 - **Step 3: Initializing the router**
 >Note: Wait a bit for the config server and shards to elect their primaries before initializing the router
