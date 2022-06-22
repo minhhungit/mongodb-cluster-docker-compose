@@ -12,3 +12,4 @@
 /client/DemoMongoClusterReader/bin/Release/netcoreapp2.2
 /client/DemoMongoClusterWriter/bin/Release/netcoreapp2.2
 /client/MongoCluster.Messages/bin/Release/netstandard2.0
+/client/.vs/ProjectEvaluation
