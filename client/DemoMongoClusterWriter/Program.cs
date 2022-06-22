@@ -9,12 +9,8 @@ namespace DemoMongoClusterWriter
 {
     class Program
     {
-        static char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
-
         static void Main(string[] args)
         {
-            var ranOem = new Random();
-
             var dbName = "MyDatabase";
             var client = new MongoClient($"mongodb://127.0.0.1:27117,127.0.0.1:27118/{dbName}");
             //var client = new MongoClient($"mongodb://127.0.0.1:27050/{dbName}");
@@ -33,12 +29,11 @@ namespace DemoMongoClusterWriter
                 Console.WriteLine($"{times} - start buiding records...");
                 for (int j = 0; j < nbrRecordsInBatch; j++)
                 {
-                    var oemNumber = alpha[ranOem.Next(0, alpha.Length)].ToString();
+
                     requests.Add(new User
                     {
                         Id = new ObjectId { },
                         SupplierId = Guid.NewGuid().ToString(),
-                        OemNumber = oemNumber,
                         Age = 30 + id,
                         Name = "Jin Auto " + id,
                         Blog = $"{id} - " + @"The company needed that grimoire because it was going to try to cast a spell in the real world—to transform a popular albeit niche game, 

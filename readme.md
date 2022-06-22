@@ -22,10 +22,11 @@ Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-comp
 
 ### Mongo Components
 
-* Config Server (1 member replica set): `configsvr01`
-* 2 Shards (each a 3 member `PSS` replica set):
+* Config Server (3 member replica set): `configsvr01`,`configsvr02`,`configsvr03`
+* 3 Shards (each a 3 member `PSS` replica set):
 	* `shard01-a`,`shard01-b`, `shard01-c`
 	* `shard02-a`,`shard02-b`, `shard02-c`
+	* `shard03-a`,`shard03-b`, `shard03-c`
 * 2 Routers (mongos): `router01`, `router02`
 
 <img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/sharding-and-replica-sets.png" style="width: 100%;" />
@@ -52,6 +53,7 @@ docker-compose exec configsvr01 sh -c "mongo < /scripts/init-configserver.js"
 
 docker-compose exec shard01-a sh -c "mongo < /scripts/init-shard01.js"
 docker-compose exec shard02-a sh -c "mongo < /scripts/init-shard02.js"
+docker-compose exec shard03-a sh -c "mongo < /scripts/init-shard03.js"
 ```
 
 If you get error like "E QUERY    [thread1] SyntaxError: unterminated string literal @(shellhelp2)", problem maybe due to:
@@ -77,7 +79,7 @@ docker-compose exec router01 mongo --port 27017
 sh.enableSharding("MyDatabase")
 
 // Setup shardingKey for collection `MyCollection`**
-db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { supplierId: "hashed", eomNumber: "hashed" } } )
+db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { supplierId: "hashed" } } )
 
 ```
 
