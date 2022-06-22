@@ -15,6 +15,9 @@ namespace MongoCluster.Messages
         [BsonElement("supplierId")]
         public string SupplierId { get; set; }
 
+        [BsonElement("oemNumber")]
+        public string OemNumber { get; set; }
+
         [BsonElement("blog")]
         public string Blog { get; set; }
 
