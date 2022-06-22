@@ -79,7 +79,7 @@ docker-compose exec router01 mongo --port 27017
 sh.enableSharding("MyDatabase")
 
 // Setup shardingKey for collection `MyCollection`**
-db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { supplierId: "hashed" } } )
+db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { supplierId: "hashed", oemNumber: 1 } } )
 
 ```
 
