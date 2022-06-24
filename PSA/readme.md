@@ -53,21 +53,21 @@ docker-compose exec shard03-a sh -c "mongo < /scripts/init-shard03.js"
 docker-compose exec shard01-a mongo --port 27017
 rs.addArb("shard01-x:27017") // make sure that you are in primary before run this command
 // or
-docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.addArb(\""shard01-x:27017\"")' | mongo --port 27017"
+docker exec -it shard-01-node-a bash -c "echo 'rs.addArb(\""shard01-x:27017\"")' | mongo --port 27017"
 ```
 
 ```bash
 docker-compose exec shard02-a mongo --port 27017
 rs.addArb("shard02-x:27017") // make sure that you are in primary before run this command
 // or
-docker exec -it rydell-shard-02-node-a bash -c "echo 'rs.addArb(\""shard02-x:27017\"")' | mongo --port 27017"
+docker exec -it shard-02-node-a bash -c "echo 'rs.addArb(\""shard02-x:27017\"")' | mongo --port 27017"
 ```
 
 ```bash
 docker-compose exec shard03-a mongo --port 27017
 rs.addArb("shard03-x:27017") // make sure that you are in primary before run this command
 // or
-docker exec -it rydell-shard-03-node-a bash -c "echo 'rs.addArb(\""shard03-x:27017\"")' | mongo --port 27017"
+docker exec -it shard-03-node-a bash -c "echo 'rs.addArb(\""shard03-x:27017\"")' | mongo --port 27017"
 ```
 
 - **Step 4: Initializing the router**
@@ -129,9 +129,9 @@ sh.status()
 > You should see 1 PRIMARY, 1 SECONDARY and 1 ARBITER
 
 ```bash
-docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
-docker exec -it rydell-shard-02-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
-docker exec -it rydell-shard-03-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it shard-02-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it shard-03-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
 ```
 *Sample Result:*
 ```
@@ -344,13 +344,13 @@ db.MyCollection.getShardDistribution()
 ### More commands
 
 ```bash
-docker exec -it rydell-mongo-config-01 bash -c "echo 'rs.status()' | mongo --port 27017"
+docker exec -it mongo-config-01 bash -c "echo 'rs.status()' | mongo --port 27017"
 
 
-docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.help()' | mongo --port 27017"
-docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
-docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.printReplicationInfo()' | mongo --port 27017" 
-docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.printSlaveReplicationInfo()' | mongo --port 27017"
+docker exec -it shard-01-node-a bash -c "echo 'rs.help()' | mongo --port 27017"
+docker exec -it shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it shard-01-node-a bash -c "echo 'rs.printReplicationInfo()' | mongo --port 27017" 
+docker exec -it shard-01-node-a bash -c "echo 'rs.printSlaveReplicationInfo()' | mongo --port 27017"
 ```
 
 ---

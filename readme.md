@@ -123,9 +123,9 @@ sh.status()
 > You should see 1 PRIMARY, 2 SECONDARY
 
 ```bash
-docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
-docker exec -it rydell-shard-02-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
-docker exec -it rydell-shard-03-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it shard-02-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it shard-03-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
 ```
 *Sample Result:*
 ```
@@ -348,13 +348,13 @@ db.MyCollection.getShardDistribution()
 ### More commands
 
 ```bash
-docker exec -it rydell-mongo-config-01 bash -c "echo 'rs.status()' | mongo --port 27017"
+docker exec -it mongo-config-01 bash -c "echo 'rs.status()' | mongo --port 27017"
 
 
-docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.help()' | mongo --port 27017"
-docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
-docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.printReplicationInfo()' | mongo --port 27017" 
-docker exec -it rydell-shard-01-node-a bash -c "echo 'rs.printSlaveReplicationInfo()' | mongo --port 27017"
+docker exec -it shard-01-node-a bash -c "echo 'rs.help()' | mongo --port 27017"
+docker exec -it shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it shard-01-node-a bash -c "echo 'rs.printReplicationInfo()' | mongo --port 27017" 
+docker exec -it shard-01-node-a bash -c "echo 'rs.printSlaveReplicationInfo()' | mongo --port 27017"
 ```
 
 ---
