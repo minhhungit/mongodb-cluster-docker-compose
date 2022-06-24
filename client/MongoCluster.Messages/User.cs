@@ -1,10 +1,9 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
 
 namespace MongoCluster.Messages
 {
-    public class User
+    public class MyDocument
     {
         [BsonId]
         public ObjectId Id { get; set; }
@@ -15,11 +14,14 @@ namespace MongoCluster.Messages
         [BsonElement("supplierId")]
         public string SupplierId { get; set; }
 
+        [BsonElement("oemNumber")]
+        public string OemNumber { get; set; }
+
         [BsonElement("blog")]
         public string Blog { get; set; }
 
-        [BsonElement("age")]
-        public int Age { get; set; }
+        [BsonElement("zipCode")]
+        public string ZipCode { get; set; }
 
         [BsonElement("location")]
         public string Location { get; set; }

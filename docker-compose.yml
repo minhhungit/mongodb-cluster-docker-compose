@@ -1,9 +1,9 @@
-version: '2'
+version: '3'
 services:
 
 ## Router
   router01:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-router-01
     command: mongos --port 27017 --configdb rs-config-server/configsvr01:27017,configsvr02:27017,configsvr03:27017 --bind_ip_all
     ports:
@@ -11,7 +11,7 @@ services:
     volumes:
       - ./scripts:/scripts
   router02:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-router-02
     command: mongos --port 27017 --configdb rs-config-server/configsvr01:27017,configsvr02:27017,configsvr03:27017 --bind_ip_all
     volumes:
@@ -23,7 +23,7 @@ services:
 
 ## Config Servers
   configsvr01:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-mongo-config-01 
     command: mongod --port 27017 --configsvr --replSet rs-config-server
     volumes:
@@ -35,7 +35,7 @@ services:
       - shard02-a
       - shard03-a
   configsvr02:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-mongo-config-02 
     command: mongod --port 27017 --configsvr --replSet rs-config-server
     volumes:
@@ -45,7 +45,7 @@ services:
     links:
       - configsvr01
   configsvr03:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-mongo-config-03 
     command: mongod --port 27017 --configsvr --replSet rs-config-server
     volumes:
@@ -59,7 +59,7 @@ services:
   ## Shards 01
    
   shard01-a:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-shard-01-node-a
     command: mongod --port 27017 --shardsvr --replSet rs-shard-01
     volumes:
@@ -70,7 +70,7 @@ services:
       - shard01-b
       - shard01-c
   shard01-b:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-shard-01-node-b
     command: mongod --port 27017 --shardsvr --replSet rs-shard-01
     volumes:
@@ -78,7 +78,7 @@ services:
     ports:
       - 27123:27017
   shard01-c:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-shard-01-node-c
     command: mongod --port 27017 --shardsvr --replSet rs-shard-01
     volumes:
@@ -88,7 +88,7 @@ services:
 
   ## Shards 02
   shard02-a:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-shard-02-node-a
     command: mongod --port 27017 --shardsvr --replSet rs-shard-02
     volumes:
@@ -99,7 +99,7 @@ services:
       - shard02-b
       - shard02-c
   shard02-b:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-shard-02-node-b
     command: mongod --port 27017 --shardsvr --replSet rs-shard-02
     volumes:
@@ -107,7 +107,7 @@ services:
     ports:
       - 27126:27017
   shard02-c:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-shard-02-node-c
     command: mongod --port 27017 --shardsvr --replSet rs-shard-02
     volumes:
@@ -117,7 +117,7 @@ services:
 
   ## Shards 03
   shard03-a:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-shard-03-node-a
     command: mongod --port 27017 --shardsvr --replSet rs-shard-03
     volumes:
@@ -128,7 +128,7 @@ services:
       - shard03-b
       - shard03-c
   shard03-b:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-shard-03-node-b
     command: mongod --port 27017 --shardsvr --replSet rs-shard-03
     volumes:
@@ -136,7 +136,7 @@ services:
     ports:
       - 27129:27017
   shard03-c:
-    image: mongo:4.0
+    image: mongo:5.0
     container_name: rydell-shard-03-node-c
     command: mongod --port 27017 --shardsvr --replSet rs-shard-03
     volumes:

@@ -4,11 +4,27 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace DemoMongoClusterWriter
 {
     class Program
     {
+        static char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+        private static readonly Random rnd = new Random();
+        private static int GetRandomNumber(int minIncludeValue, int maxExcludeValue)
+        {
+            return rnd.Next(minIncludeValue, maxExcludeValue);
+        }
+
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCD";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[GetRandomNumber(0, s.Length)]).ToArray());
+        }
+
         static void Main(string[] args)
         {
             var dbName = "MyDatabase";
@@ -16,25 +32,27 @@ namespace DemoMongoClusterWriter
             //var client = new MongoClient($"mongodb://127.0.0.1:27050/{dbName}");
 
             var database = client.GetDatabase(dbName);
-            var collection = database.GetCollection<User>("MyCollection");
+            var collection = database.GetCollection<MyDocument>("MyCollection");
 
             var id = 0;
             var nbrRecordsInBatch = 10_000;
             Stopwatch stopwatch = Stopwatch.StartNew();
-            for (int times = 0; times < 10; times ++)
+            for (int times = 0; times < int.MaxValue; times++)
             {
                 Stopwatch stopwatchPart = Stopwatch.StartNew();
-                List<User> requests = new List<User>();
+                List<MyDocument> requests = new List<MyDocument>();
 
                 Console.WriteLine($"{times} - start buiding records...");
                 for (int j = 0; j < nbrRecordsInBatch; j++)
                 {
+                    var zipCode = GetRandomNumber(1, 1000).ToString().PadLeft(4, '0');
 
-                    requests.Add(new User
+                    requests.Add(new MyDocument
                     {
                         Id = new ObjectId { },
                         SupplierId = Guid.NewGuid().ToString(),
-                        Age = 30 + id,
+                        OemNumber = RandomString(4),
+                        ZipCode = zipCode,
                         Name = "Jin Auto " + id,
                         Blog = $"{id} - " + @"The company needed that grimoire because it was going to try to cast a spell in the real world—to transform a popular albeit niche game, 
                                          complicated and nerdy, into a cross-media franchise. That has happened for comic books, for literature, even for toys, heaven help us. 
@@ -44,7 +62,7 @@ namespace DemoMongoClusterWriter
                                          And then maybe live action. Movies. Turn the universe of Magic: The Gathering into a story universe."
                     });
 
-                     id++;
+                    id++;
                 }
 
                 Console.WriteLine($"{times} - start inserting...");
@@ -52,7 +70,7 @@ namespace DemoMongoClusterWriter
                 collection.InsertManyAsync(requests, new InsertManyOptions { IsOrdered = false }).GetAwaiter().GetResult();
                 stopwatchPart.Stop();
 
-                Console.WriteLine($"{times} - {stopwatchPart.Elapsed.TotalMilliseconds}ms - {nbrRecordsInBatch} records");                
+                Console.WriteLine($"{times} - {stopwatchPart.Elapsed.TotalMilliseconds}ms - {nbrRecordsInBatch} records");
             }
 
             stopwatch.Stop();

@@ -13,3 +13,6 @@
 /client/DemoMongoClusterWriter/bin/Release/netcoreapp2.2
 /client/MongoCluster.Messages/bin/Release/netstandard2.0
 /client/.vs/ProjectEvaluation
+/client/DemoMongoClusterReader/bin/Debug/net5.0
+/client/DemoMongoClusterWriter/bin/Debug/net5.0
+/client/MongoCluster.Messages/bin/Debug/netstandard2.1
