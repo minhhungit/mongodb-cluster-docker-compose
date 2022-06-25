@@ -112,8 +112,10 @@ namespace DemoMongoClusterReader
             }
 
             Stopwatch stopwatch = Stopwatch.StartNew();
-            //var docEntry = collection.FindAsync(filter).GetAwaiter().GetResult().ToList();
-            var nbrDocs = await collection.CountDocumentsAsync(filter);
+            var data = await collection.Find(filter).Skip(0).Limit(50).ToListAsync();
+            var nbrDocs = data.Count();
+
+            //var nbrDocs = await collection.CountDocumentsAsync(filter);
             stopwatch.Stop();
 
             _ = Task.Run(() =>
