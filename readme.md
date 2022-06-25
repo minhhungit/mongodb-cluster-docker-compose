@@ -9,7 +9,7 @@ Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-comp
 
 ## 📖 Table of Contents
 - [❓ Mongo Components?](#-mongo-components-)
-- [✨ Steps](#-step-1-start-all-of-the-containers-)
+- [✨ Steps](#-steps-)
   - [Step 1: Start all of the containers](#-step-1-start-all-of-the-containers-)
   - [Step 2: Initialize the replica sets (config servers and shards) and routers](#-step-2-initialize-the-replica-sets-config-servers-and-shards-and-routers-)
   - [Step 3: Initializing the router](#-step-3-initializing-the-router-)
