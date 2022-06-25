@@ -7,6 +7,25 @@ Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-comp
 
 ---
 
+## 📖 Table of Contents
+- [❓ Mongo Components?](#-mongo-components-)
+- [✨ Steps](#-step-1-start-all-of-the-containers-)
+  - [Step 1: Start all of the containers](#-step-1-start-all-of-the-containers-)
+  - [Step 2: Initialize the replica sets (config servers and shards) and routers](#-step-2-initialize-the-replica-sets-config-servers-and-shards-and-routers-)
+  - [Step 3: Initializing the router](#-step-3-initializing-the-router-)
+  - [Step 4: Enable sharding and setup sharding-key](#-step-4-enable-sharding-and-setup-sharding-key-)
+- [✅ Verify](#-verify-)
+  - [Verify the status of the sharded cluster](#-verify-the-status-of-the-sharded-cluster-)
+  - [Verify status of replica set for each shard](#-verify-status-of-replica-set-for-each-shard-)
+  - [Check database status](#-check-database-status-)
+- [🔎 More commands](#-more-commands-)
+  - [Normal Startup](#-normal-startup-)
+  - [Resetting the Cluster](#-resetting-the-cluster-)
+  - [Clean up docker-compose](#-clean-up-docker-compose-)
+- [📺 Screenshot](#-screenshot-)
+- [👌 Donate ^^](#-donate--)
+- [📚 Refrences](#-refrences-)
+
 ### WARNING (Windows & OS X) 
 
 >The default Docker setup on Windows and OS X uses a VirtualBox VM to host the Docker daemon. 
@@ -20,7 +39,7 @@ Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-comp
 >or [here](https://github.com/docker-library/mongo/issues/232#issuecomment-355423692))
 ---
 
-### Mongo Components
+## ❓ Mongo Components [🔝](#-table-of-contents)
 
 * Config Server (3 member replica set): `configsvr01`,`configsvr02`,`configsvr03`
 * 3 Shards (each a 3 member `PSS` replica set):
@@ -31,8 +50,10 @@ Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-comp
 
 <img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/sharding-and-replica-sets.png" style="width: 100%;" />
 
-### Setup
-- **Step 1: Start all of the containers**
+## ✨ Steps [🔝](#-table-of-contents)
+### 👉 Step 1: Start all of the containers [🔝](#-table-of-contents)
+
+Clone this repository, open powershell or cmd on the repo folder and run:
 
 ```bash
 docker-compose up -d
@@ -46,7 +67,7 @@ in Windows Docker Desktop (Settings -> Resources-> WSL Integration -> Enable int
 
 Link: https://stackoverflow.com/a/65347214/3007147
 
-- **Step 2: Initialize the replica sets (config servers and shards) and routers**
+### 👉 Step 2: Initialize the replica sets (config servers and shards) and routers [🔝](#-table-of-contents)
 
 ```bash
 docker-compose exec configsvr01 sh -c "mongo < /scripts/init-configserver.js"
@@ -64,14 +85,14 @@ To fix it, modify script files in `scripts` folder, remove newline, change multi
 
 Link: https://stackoverflow.com/a/51728442/3007147
 
-- **Step 3: Initializing the router**
+### 👉 Step 3: Initializing the router [🔝](#-table-of-contents)
 >Note: Wait a bit for the config server and shards to elect their primaries before initializing the router
 
 ```bash
 docker-compose exec router01 sh -c "mongo < /scripts/init-router.js"
 ```
 
-- **Step 4: Enable sharding and setup sharding-key**
+### 👉 Step 4: Enable sharding and setup sharding-key [🔝](#-table-of-contents)
 ```bash
 docker-compose exec router01 mongo --port 27017
 
@@ -83,11 +104,14 @@ db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { oemNumber:
 
 ```
 
->Done! but before you start inserting data you should verify them first
+---
+### ✔️ Done !!!
+#### But before you start inserting data you should verify them first
+---
 
-### Verify
+## 📋 Verify [🔝](#-table-of-contents)
 
-- **Verify the status of the sharded cluster**
+### ✅ Verify the status of the sharded cluster [🔝](#-table-of-contents)
 
 ```bash
 docker-compose exec router01 mongo --port 27017
@@ -119,7 +143,7 @@ sh.status()
         {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
 ```
 
-- **Verify status of replica set for each shard**
+### ✅ Verify status of replica set for each shard [🔝](#-table-of-contents)
 > You should see 1 PRIMARY, 2 SECONDARY
 
 ```bash
@@ -128,7 +152,7 @@ docker exec -it shard-02-node-a bash -c "echo 'rs.status()' | mongo --port 27017
 docker exec -it shard-03-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
 ```
 *Sample Result:*
-```
+```ps1
 MongoDB shell version v4.0.11
 connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
 Implicit session: session { "id" : UUID("dcfe5d8f-75ef-45f7-9595-9d72dc8a81fc") }
@@ -263,7 +287,7 @@ MongoDB server version: 4.0.11
 bye
 ```
 
-- **Check database status**
+### ✅ Check database status [🔝](#-table-of-contents)
 ```bash
 docker-compose exec router01 mongo --port 27017
 use MyDatabase
@@ -345,7 +369,7 @@ db.MyCollection.getShardDistribution()
 }
 ```
 
-### More commands
+## 🔎 More commands [🔝](#-table-of-contents)
 
 ```bash
 docker exec -it mongo-config-01 bash -c "echo 'rs.status()' | mongo --port 27017"
@@ -359,38 +383,40 @@ docker exec -it shard-01-node-a bash -c "echo 'rs.printSlaveReplicationInfo()' |
 
 ---
 
-### Normal Startup
-The cluster only has to be initialized on the first run. Subsequent startup can be achieved simply with `docker-compose up` or `docker-compose up -d`
+### ✦ Normal Startup [🔝](#-table-of-contents)
+The cluster only has to be initialized on the first run. 
 
-### Resetting the Cluster
+Subsequent startup can be achieved simply with `docker-compose up` or `docker-compose up -d`
+
+### ✦ Resetting the Cluster [🔝](#-table-of-contents)
 To remove all data and re-initialize the cluster, make sure the containers are stopped and then:
 
 ```bash
 docker-compose rm
 ```
 
-### Clean up docker-compose
+### ✦ Clean up docker-compose [🔝](#-table-of-contents)
 ```bash
 docker-compose down -v --rmi all --remove-orphans
 ```
 
-Execute the **First Run** instructions again.
-
-### Screenshot
+## 📺 Screenshot [🔝](#-table-of-contents)
 
 <img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/demo.png" style="width: 100%;" />
 <img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/demo-03.png" style="width: 100%;" />
 <img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/demo-02.png" style="width: 100%;" />
 <img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/replicaset-shard-01.png" style="width: 100%;" />
 
-### Donate ^^
+---
+
+## 👌 Donate ^^ [🔝](#-table-of-contents)
 **If you like my works and would like to support then you can buy me a coffee ☕️ anytime**
 
 <a href='https://ko-fi.com/I2I13GAGL' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi4.png?v=2' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> 
 
-**I would appreciate it!!!**
+**I would appreciate it ❤️❤️❤️**
 
 ---
-#### Inspired by:
+## 📚 Refrences [🔝](#-table-of-contents)
 - https://github.com/jfollenfant/mongodb-sharding-docker-compose
 - https://viblo.asia/p/cai-dat-mongo-cluster-voi-docker-m68Z0NN25kG
