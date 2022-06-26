@@ -11,7 +11,7 @@ Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-comp
 - [❓ Mongo Components?](#-mongo-components-)
 - [✨ Steps](#-steps-)
   - [Step 1: Start all of the containers](#-step-1-start-all-of-the-containers-)
-  - [Step 2: Initialize the replica sets (config servers and shards) and routers](#-step-2-initialize-the-replica-sets-config-servers-and-shards-and-routers-)
+  - [Step 2: Initialize the replica sets (config servers and shards)](#-step-2-initialize-the-replica-sets-config-servers-and-shards-)
   - [Step 3: Initializing the router](#-step-3-initializing-the-router-)
   - [Step 4: Enable sharding and setup sharding-key](#-step-4-enable-sharding-and-setup-sharding-key-)
 - [✅ Verify](#-verify-)
@@ -67,7 +67,7 @@ in Windows Docker Desktop (Settings -> Resources-> WSL Integration -> Enable int
 
 Link: https://stackoverflow.com/a/65347214/3007147
 
-### 👉 Step 2: Initialize the replica sets (config servers and shards) and routers [🔝](#-table-of-contents)
+### 👉 Step 2: Initialize the replica sets (config servers and shards) [🔝](#-table-of-contents)
 
 ```bash
 docker-compose exec configsvr01 sh -c "mongo < /scripts/init-configserver.js"
