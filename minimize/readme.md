@@ -1,4 +1,4 @@
-Demo Mongo Sharded Cluster with Docker Compose
+MongoDB cluster minimize
 =========================================
 
 * Config Server: `configsvr01`
@@ -7,7 +7,7 @@ Demo Mongo Sharded Cluster with Docker Compose
 	* `shard02-a`,`shard02-b`, `shard02-c`
 * 1 Routers (mongos): `router01`
 
-### step 1
+### 👉 Step 1
 ```bash
 docker-compose up -d
 ```
