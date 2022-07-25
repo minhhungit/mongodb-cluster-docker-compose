@@ -46,7 +46,9 @@ db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { oemNumber:
 #### But before you start inserting data you should verify them first
 ---
 
-If you want to add new shard to existed cluster, check more here 
+## !!! If you want to add new shard to existed cluster, [check more here](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/minimize/scripts/update01)
+
+---
 
 ## 📋 Verify [🔝](#-table-of-contents)
 
