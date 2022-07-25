@@ -46,6 +46,8 @@ db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { oemNumber:
 #### But before you start inserting data you should verify them first
 ---
 
+If you want to add new shard to existed cluster, check more here 
+
 ## 📋 Verify [🔝](#-table-of-contents)
 
 ### ✅ Verify the status of the sharded cluster [🔝](#-table-of-contents)
