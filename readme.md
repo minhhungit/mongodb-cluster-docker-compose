@@ -70,11 +70,11 @@ Link: https://stackoverflow.com/a/65347214/3007147
 ### 👉 Step 2: Initialize the replica sets (config servers and shards) [🔝](#-table-of-contents)
 
 ```bash
-docker-compose exec configsvr01 sh -c "mongo < /scripts/init-configserver.js"
+docker-compose exec configsvr01 sh -c "mongosh < /scripts/init-configserver.js"
 
-docker-compose exec shard01-a sh -c "mongo < /scripts/init-shard01.js"
-docker-compose exec shard02-a sh -c "mongo < /scripts/init-shard02.js"
-docker-compose exec shard03-a sh -c "mongo < /scripts/init-shard03.js"
+docker-compose exec shard01-a sh -c "mongosh < /scripts/init-shard01.js"
+docker-compose exec shard02-a sh -c "mongosh < /scripts/init-shard02.js"
+docker-compose exec shard03-a sh -c "mongosh < /scripts/init-shard03.js"
 ```
 
 If you get error like "E QUERY    [thread1] SyntaxError: unterminated string literal @(shellhelp2)", problem maybe due to:
@@ -89,12 +89,12 @@ Link: https://stackoverflow.com/a/51728442/3007147
 >Note: Wait a bit for the config server and shards to elect their primaries before initializing the router
 
 ```bash
-docker-compose exec router01 sh -c "mongo < /scripts/init-router.js"
+docker-compose exec router01 sh -c "mongosh < /scripts/init-router.js"
 ```
 
 ### 👉 Step 4: Enable sharding and setup sharding-key [🔝](#-table-of-contents)
 ```bash
-docker-compose exec router01 mongo --port 27017
+docker-compose exec router01 mongosh --port 27017
 
 // Enable sharding for database `MyDatabase`
 sh.enableSharding("MyDatabase")
@@ -107,6 +107,13 @@ db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { oemNumber:
 ---
 ### ✔️ Done !!!
 #### But before you start inserting data you should verify them first
+
+Btw, here is mongodb connection string if you want to try to connect mongodb cluster with MongoDB Compass
+
+```
+mongodb://127.0.0.1:27117,127.0.0.1:27118
+```
+
 ---
 
 ## 📋 Verify [🔝](#-table-of-contents)
@@ -114,7 +121,7 @@ db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { oemNumber:
 ### ✅ Verify the status of the sharded cluster [🔝](#-table-of-contents)
 
 ```bash
-docker-compose exec router01 mongo --port 27017
+docker-compose exec router01 mongosh --port 27017
 sh.status()
 ```
 *Sample Result:*
@@ -147,9 +154,9 @@ sh.status()
 > You should see 1 PRIMARY, 2 SECONDARY
 
 ```bash
-docker exec -it shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
-docker exec -it shard-02-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
-docker exec -it shard-03-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
+docker exec -it shard-01-node-a bash -c "echo 'rs.status()' | mongosh --port 27017" 
+docker exec -it shard-02-node-a bash -c "echo 'rs.status()' | mongosh --port 27017" 
+docker exec -it shard-03-node-a bash -c "echo 'rs.status()' | mongosh --port 27017" 
 ```
 *Sample Result:*
 ```ps1
@@ -289,7 +296,7 @@ bye
 
 ### ✅ Check database status [🔝](#-table-of-contents)
 ```bash
-docker-compose exec router01 mongo --port 27017
+docker-compose exec router01 mongosh --port 27017
 use MyDatabase
 db.stats()
 db.MyCollection.getShardDistribution()
@@ -372,13 +379,13 @@ db.MyCollection.getShardDistribution()
 ## 🔎 More commands [🔝](#-table-of-contents)
 
 ```bash
-docker exec -it mongo-config-01 bash -c "echo 'rs.status()' | mongo --port 27017"
+docker exec -it mongo-config-01 bash -c "echo 'rs.status()' | mongosh --port 27017"
 
 
-docker exec -it shard-01-node-a bash -c "echo 'rs.help()' | mongo --port 27017"
-docker exec -it shard-01-node-a bash -c "echo 'rs.status()' | mongo --port 27017" 
-docker exec -it shard-01-node-a bash -c "echo 'rs.printReplicationInfo()' | mongo --port 27017" 
-docker exec -it shard-01-node-a bash -c "echo 'rs.printSlaveReplicationInfo()' | mongo --port 27017"
+docker exec -it shard-01-node-a bash -c "echo 'rs.help()' | mongosh --port 27017"
+docker exec -it shard-01-node-a bash -c "echo 'rs.status()' | mongosh --port 27017" 
+docker exec -it shard-01-node-a bash -c "echo 'rs.printReplicationInfo()' | mongosh --port 27017" 
+docker exec -it shard-01-node-a bash -c "echo 'rs.printSlaveReplicationInfo()' | mongosh --port 27017"
 ```
 
 ---
