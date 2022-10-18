@@ -114,6 +114,8 @@ Btw, here is mongodb connection string if you want to try to connect mongodb clu
 mongodb://127.0.0.1:27117,127.0.0.1:27118
 ```
 
+And if you are .NET developer there is a sample READ/WRITE data in mongodb cluster here: [https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/client](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/client)
+
 ---
 
 ## 📋 Verify [🔝](#-table-of-contents)
