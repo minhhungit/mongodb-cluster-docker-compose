@@ -69,6 +69,8 @@ Link: https://stackoverflow.com/a/65347214/3007147
 
 ### 👉 Step 2: Initialize the replica sets (config servers and shards) [🔝](#-table-of-contents)
 
+Run these command one by one:
+
 ```bash
 docker-compose exec configsvr01 sh -c "mongosh < /scripts/init-configserver.js"
 
