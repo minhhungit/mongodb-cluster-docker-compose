@@ -1,20 +1,19 @@
 Demo MongoDB (6.0.1) Sharded Cluster with Docker Compose
 =========================================
 
-### PSS Style (Primary -Secondary - Secondary)
-
-- Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/PSA)
-- If you need to set cluster with keyfile authentication, [check here](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/Feature/Auth/with-keyfile-auth)
+### Primary - Secondary - Secondary - w/ Keyfile Authetication
 
 ---
 
 ## 📖 Table of Contents
 - [❓ Mongo Components?](#-mongo-components-)
 - [✨ Steps](#-steps-)
+  - [Preparing](#-preparing-)
   - [Step 1: Start all of the containers](#-step-1-start-all-of-the-containers-)
   - [Step 2: Initialize the replica sets (config servers and shards)](#-step-2-initialize-the-replica-sets-config-servers-and-shards-)
   - [Step 3: Initializing the router](#-step-3-initializing-the-router-)
-  - [Step 4: Enable sharding and setup sharding-key](#-step-4-enable-sharding-and-setup-sharding-key-)
+  - [Step 4: Setup authentication](#-step-4-setup-authentication-)
+  - [Step 5: Enable sharding and setup sharding-key](#-step-4-enable-sharding-and-setup-sharding-key-)
 - [✅ Verify](#-verify-)
   - [Verify the status of the sharded cluster](#-verify-the-status-of-the-sharded-cluster-)
   - [Verify status of replica set for each shard](#-verify-status-of-replica-set-for-each-shard-)
@@ -38,12 +37,12 @@ Demo MongoDB (6.0.1) Sharded Cluster with Docker Compose
 >
 >&#8211; Docker Hub ([source here](https://github.com/docker-library/docs/blob/b78d49c9dffe5dd8b3ffd1db338c62b9e1fc3db8/mongo/content.md#where-to-store-data) 
 >or [here](https://github.com/docker-library/mongo/issues/232#issuecomment-355423692))
+
 ---
 
 ### Note: 
 
-If you want to modify config files, on Windows you might need to save those file with EOL Conversion Unix (LF) mode. You can use notepad++ to do that (Edit menu => EOL Conversion => Unix) (more here)[https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png]
-
+If you want to modify config files, on Windows you might need to save those file with EOL Conversion Unix (LF) mode. You can use notepad++ to do that ((Edit menu => EOL Conversion => Unix (LF)))[https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png]
 
 ---
 ## ❓ Mongo Components [🔝](#-table-of-contents)
@@ -59,9 +58,35 @@ If you want to modify config files, on Windows you might need to save those file
 
 ## ✨ Steps [🔝](#-table-of-contents)
 
+### Preparing
+
+First, make sure that you cloned this repository and go to folder `with-keyfile-auth`, this folder contains authentication docker-compose (for this tutorial)
+
+Next, we need a keyfile to setup authetication, I already created a file (here)[https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/with-keyfile-auth/mongodb-build/auth]
+If you want to use it for demo purpose then you can next to [Step 1: Start all of the containers](#-step-1-start-all-of-the-containers-)
+
+But if you want to create a key file for yourself, do as described below:
+
+On Linux, very easy to create the file with command:
+```
+openssl rand -base64 756 > mongodb-keyfile
+chmod 400 mongodb-keyfile
+```
+Read more here https://www.mongodb.com/docs/manual/tutorial/deploy-replica-set-with-keyfile-access-control/
+
+=> **If you are using Windows**, you can create keyfile using (Win32OpenSSL)[https://slproweb.com/products/Win32OpenSSL.html]
+
+Download Win32OpenSSL, install and run cmd/powershell/terminal as administrator:
+```
+cd C:\Program Files\OpenSSL-Win64\bin
+openssl rand -base64 700 > mongodb-keyfile
+```
+
+After creating `mongodb-keyfile`, **remember** to move the file to folder `with-keyfile-auth\mongodb-build\auth\` and go to next step.
+
 ### 👉 Step 1: Start all of the containers [🔝](#-table-of-contents)
 
-Clone this repository, open powershell or cmd on the repo folder and run:
+Make sure that you read preparing step, after that open powershell or cmd on folder `with-keyfile-auth` and run:
 
 ```bash
 docker-compose up -d
@@ -80,11 +105,11 @@ Link: https://stackoverflow.com/a/65347214/3007147
 Run these command one by one:
 
 ```bash
-docker-compose exec configsvr01 sh -c "mongosh < /scripts/init-configserver.js"
+docker-compose exec configsvr01 bash "/scripts/init-configserver.js"
 
-docker-compose exec shard01-a sh -c "mongosh < /scripts/init-shard01.js"
-docker-compose exec shard02-a sh -c "mongosh < /scripts/init-shard02.js"
-docker-compose exec shard03-a sh -c "mongosh < /scripts/init-shard03.js"
+docker-compose exec shard01-a bash "/scripts/init-shard01.js"
+docker-compose exec shard02-a bash "/scripts/init-shard02.js"
+docker-compose exec shard03-a bash "/scripts/init-shard03.js"
 ```
 
 If you get error like "E QUERY    [thread1] SyntaxError: unterminated string literal @(shellhelp2)", problem maybe due to:
@@ -93,22 +118,50 @@ If you get error like "E QUERY    [thread1] SyntaxError: unterminated string lit
 
 To fix it, modify script files in `scripts` folder, remove newline, change multi line to one line.
 
-Or save the file with Unix mode in notepad++ ((Edit menu => EOL Conversion => Unix (LF)))[https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png]
+Or you can save the file with Unix mode in notepad++ ((Edit menu => EOL Conversion => Unix (LF)))[https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png]
 
 Link: https://stackoverflow.com/a/51728442/3007147
 
 ### 👉 Step 3: Initializing the router [🔝](#-table-of-contents)
-
->Note: Wait a bit for the config server and shards to elect their primaries before initializing the router
+>Note: Wait a bit 5-10 seconds for the config server and shards to elect their primaries before initializing the router
 
 ```bash
 docker-compose exec router01 sh -c "mongosh < /scripts/init-router.js"
 ```
 
-### 👉 Step 4: Enable sharding and setup sharding-key [🔝](#-table-of-contents)
-```bash
-docker-compose exec router01 mongosh --port 27017
+### 👉 Step 4: Setup authentication
 
+Default account is `your_admin` / `your_password`
+
+```bash
+docker-compose exec configsvr01 bash "/scripts/auth.js"
+
+docker-compose exec shard01-a bash "/scripts/auth.js"
+docker-compose exec shard02-a bash "/scripts/auth.js"
+docker-compose exec shard03-a bash "/scripts/auth.js"
+```
+
+Note: On Linux you might need to config permission firstly for `/scripts/auth.js`, use this command (no need for Windows): 
+
+```
+chmod +x /scripts/auth.js
+```
+
+Okay, at this time your cluster is ready !
+
+### 👉 Step 5: Enable sharding and setup sharding-key [🔝](#-table-of-contents)
+
+Firstly, you need to access to router, it will ask your password:
+
+```bash
+docker-compose exec router01 mongosh --port 27017 -u "your_admin" --authenticationDatabase admin
+```
+
+Enter your password, in this case password is `your_password`, then run these commands to create database and enable sharding.
+
+Here we will create database `MyDatabase` and collection `MyCollection`
+
+```
 // Enable sharding for database `MyDatabase`
 sh.enableSharding("MyDatabase")
 
@@ -121,10 +174,10 @@ db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { oemNumber:
 ### ✔️ Done !!!
 #### But before you start inserting data you should verify them first
 
-Btw, here is mongodb connection string if you want to try to connect mongodb cluster with MongoDB Compass from your host computer (which is running docker)
+Btw, here is mongodb connection string if you want to try to connect mongodb cluster with MongoDB Compass from your host computer
 
 ```
-mongodb://127.0.0.1:27117,127.0.0.1:27118
+mongodb://your_admin:your_password@127.0.0.1:27117,127.0.0.1:27118/?authMechanism=DEFAULT
 ```
 
 And if you are .NET developer there is a sample READ/WRITE data in mongodb cluster here: [https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/client](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/client)
@@ -135,10 +188,18 @@ And if you are .NET developer there is a sample READ/WRITE data in mongodb clust
 
 ### ✅ Verify the status of the sharded cluster [🔝](#-table-of-contents)
 
+```
+docker exec -it router-01 bash -c "echo 'sh.status()' | mongosh --port 27017 -u 'your_admin' -p 'your_password' --authenticationDatabase admin"
+```
+
+or
+
 ```bash
-docker-compose exec router01 mongosh --port 27017
+docker-compose exec router01 mongosh --port 27017 -u "your_admin" --authenticationDatabase admin
 sh.status()
 ```
+
+
 *Sample Result:*
 ```
   sharding version: {
@@ -169,9 +230,9 @@ sh.status()
 > You should see 1 PRIMARY, 2 SECONDARY
 
 ```bash
-docker exec -it shard-01-node-a bash -c "echo 'rs.status()' | mongosh --port 27017" 
-docker exec -it shard-02-node-a bash -c "echo 'rs.status()' | mongosh --port 27017" 
-docker exec -it shard-03-node-a bash -c "echo 'rs.status()' | mongosh --port 27017" 
+docker exec -it shard-01-node-a bash -c "echo 'rs.status()' | mongosh --port 27017 -u 'your_admin' -p 'your_password' --authenticationDatabase admin"
+docker exec -it shard-02-node-a bash -c "echo 'rs.status()' | mongosh --port 27017 -u 'your_admin' -p 'your_password' --authenticationDatabase admin"
+docker exec -it shard-03-node-a bash -c "echo 'rs.status()' | mongosh --port 27017 -u 'your_admin' -p 'your_password' --authenticationDatabase admin"
 ```
 *Sample Result:*
 ```ps1
@@ -311,7 +372,7 @@ bye
 
 ### ✅ Check database status [🔝](#-table-of-contents)
 ```bash
-docker-compose exec router01 mongosh --port 27017
+docker-compose exec router01 mongosh --port 27017 -u "your_admin" --authenticationDatabase admin
 use MyDatabase
 db.stats()
 db.MyCollection.getShardDistribution()
@@ -394,13 +455,56 @@ db.MyCollection.getShardDistribution()
 ## 🔎 More commands [🔝](#-table-of-contents)
 
 ```bash
-docker exec -it mongo-config-01 bash -c "echo 'rs.status()' | mongosh --port 27017"
+docker exec -it mongo-config-01 bash -c "echo 'rs.status()' | mongosh --port 27017 -u 'your_admin' -p 'your_password' --authenticationDatabase admin"
 
+docker exec -it shard-01-node-a bash -c "echo 'rs.help()' | mongosh --port 27017 -u 'your_admin' -p 'your_password' --authenticationDatabase admin"
+docker exec -it shard-01-node-a bash -c "echo 'rs.status()' | mongosh --port 27017 -u 'your_admin' -p 'your_password' --authenticationDatabase admin" 
+docker exec -it shard-01-node-a bash -c "echo 'rs.printReplicationInfo()' | mongosh --port 27017 -u 'your_admin' -p 'your_password' --authenticationDatabase admin" 
+docker exec -it shard-01-node-a bash -c "echo 'rs.printSlaveReplicationInfo()' | mongosh --port 27017 -u 'your_admin' -p 'your_password' --authenticationDatabase admin"
+```
 
-docker exec -it shard-01-node-a bash -c "echo 'rs.help()' | mongosh --port 27017"
-docker exec -it shard-01-node-a bash -c "echo 'rs.status()' | mongosh --port 27017" 
-docker exec -it shard-01-node-a bash -c "echo 'rs.printReplicationInfo()' | mongosh --port 27017" 
-docker exec -it shard-01-node-a bash -c "echo 'rs.printSlaveReplicationInfo()' | mongosh --port 27017"
+For step 4, you also can exec command directly in container, run bellow command line by line (for example configserver) :
+
+```
+docker-compose exec configsvr01 mongosh --port 27017
+rs.initiate({_id: "rs-config-server", configsvr: true, version: 1, members: [ { _id: 0, host : 'configsvr01:27017' }, { _id: 1, host : 'configsvr02:27017' }, { _id: 2, host : 'configsvr03:27017' } ] });
+use admin;
+db.createUser({user: "your_admin", pwd: "your_password", roles:[{role: "root", db: "admin"}]});
+exit;
+```
+
+Try to insert some documents, make sure that you switched to database that have just created by using:
+
+```
+use MyDatabase
+```
+
+then run:
+
+```
+db.MyCollection.insertMany([
+{ oemNumber: "AAAAAAA", zipCode: 11111, supplierId: "02e1e275-6aa4-43ff-bfb3-39c48ac918b0" },
+{ oemNumber: "BBBBBBB", zipCode: 22222, supplierId: "5f55b8b3-43b2-4e02-a1b6-49a12eefc845" },
+{ oemNumber: "CCCCCCC", zipCode: 33333, supplierId: "916e2fa8-74a8-40fa-a034-8497278031c3" },
+{ oemNumber: "DDDDDDD", zipCode: 44444, supplierId: "70ffe46d-91cd-4552-812c-6c3395d52fcd" },
+{ oemNumber: "EEEEEEE", zipCode: 11111, supplierId: "695d786c-3254-477d-a9af-9b628cec51e5" },
+{ oemNumber: "AAAAAAA", zipCode: 11111, supplierId: "a589e2e1-6206-43a4-a948-617f3e26524d" }
+]);
+```
+
+### Check electing status
+
+```
+docker exec -it mongo-config-01 bash -c "echo 'rs.status().members.forEach(function (m) { print(m.stateStr.split(\`":\`").shift()) })' | mongosh --port 27017"
+
+docker exec -it shard-01-node-a bash -c "echo 'rs.status().members.forEach(function (m) { print(m.stateStr.split(\`":\`").shift()) })' | mongosh --port 27017"
+docker exec -it shard-02-node-a bash -c "echo 'rs.status().members.forEach(function (m) { print(m.stateStr.split(\`":\`").shift()) })' | mongosh --port 27017"
+docker exec -it shard-03-node-a bash -c "echo 'rs.status().members.forEach(function (m) { print(m.stateStr.split(\`":\`").shift()) })' | mongosh --port 27017"
+```
+
+If you configured authentication then use this syntax:
+```
+docker exec -it mongo-config-01 bash -c "echo 'rs.status().members.forEach(function (m) { print(m.stateStr.split(\`":\`").shift()) })' | mongosh --port 27017 -u 'your_admin' -p 'your_password' --authenticationDatabase admin"
 ```
 
 ---
