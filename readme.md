@@ -42,7 +42,7 @@ Demo MongoDB (6.0.1) Sharded Cluster with Docker Compose
 
 ### Note: 
 
-If you want to modify config files, on Windows you might need to save those file with EOL Conversion Unix (LF) mode. You can use notepad++ to do that (Edit menu => EOL Conversion => Unix) (more here)[https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png]
+If you want to modify config files, on Windows you might need to save those file with EOL Conversion Unix (LF) mode. You can use notepad++ to do that [Edit menu => EOL Conversion => Unix](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png)
 
 
 ---
@@ -93,7 +93,7 @@ If you get error like "E QUERY    [thread1] SyntaxError: unterminated string lit
 
 To fix it, modify script files in `scripts` folder, remove newline, change multi line to one line.
 
-Or save the file with Unix mode in notepad++ ((Edit menu => EOL Conversion => Unix (LF)))[https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png]
+Or save the file with Unix mode in notepad++ [Edit menu => EOL Conversion => Unix](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png)
 
 Link: https://stackoverflow.com/a/51728442/3007147
 
