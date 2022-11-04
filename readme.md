@@ -4,7 +4,7 @@ Demo MongoDB (6.0.1) Sharded Cluster with Docker Compose
 ### PSS Style (Primary -Secondary - Secondary)
 
 - Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/PSA)
-- If you need to set cluster with keyfile authentication, [check here](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/with-keyfile-auth)
+- If you need to set cluster with keyfile authentication, [check here](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/Feature/Auth/with-keyfile-auth)
 
 ---
 
@@ -42,7 +42,7 @@ Demo MongoDB (6.0.1) Sharded Cluster with Docker Compose
 
 ### Note: 
 
-If you want to modify config files, on Windows you might need to save those file with EOL Conversion Unix (LF) mode. You can use notepad++ to do that ((Edit menu => EOL Conversion => Unix (LF)))[https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png]
+If you want to modify config files, on Windows you might need to save those file with EOL Conversion Unix (LF) mode. You can use notepad++ to do that (Edit menu => EOL Conversion => Unix) (more here)[https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png]
 
 
 ---
