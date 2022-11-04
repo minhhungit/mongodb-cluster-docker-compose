@@ -1,4 +1,4 @@
-Demo MongoDB (6.0.1) Sharded Cluster with Docker Compose
+MongoDB (6.0.2) Sharded Cluster - Docker Compose - Keyfile Authetication
 =========================================
 
 ### Primary - Secondary - Secondary - w/ Keyfile Authetication
