@@ -8,7 +8,7 @@ MongoDB (6.0.2) Sharded Cluster - Keyfile Authetication
 ## 📖 Table of Contents
 - [❓ Mongo Components?](#-mongo-components-)
 - [✨ Steps](#-steps-)
-  - [Preparing](#-preparing-)
+  - [Preparing](#preparing)
   - [Step 1: Start all of the containers](#-step-1-start-all-of-the-containers-)
   - [Step 2: Initialize the replica sets (config servers and shards)](#-step-2-initialize-the-replica-sets-config-servers-and-shards-)
   - [Step 3: Initializing the router](#-step-3-initializing-the-router-)
