@@ -61,6 +61,9 @@ If you want to modify config files, on Windows you might need to save those file
 
 ### 👉 Step 1: Start all of the containers [🔝](#-table-of-contents)
 
+> I have to remind again in case you missed 😊
+> If you need to set cluster with keyfile authentication, [check here](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/Feature/Auth/with-keyfile-auth)
+
 Clone this repository, open powershell or cmd on the repo folder and run:
 
 ```bash
