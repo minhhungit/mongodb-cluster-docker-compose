@@ -8,7 +8,7 @@ MongoDB (6.0.2) Sharded Cluster - Keyfile Authetication
 ## 📖 Table of Contents
 - [❓ Mongo Components?](#-mongo-components-)
 - [✨ Steps](#-steps-)
-  - [Preparing](#preparing)
+  - [Preparing](#-preparing)
   - [Step 1: Start all of the containers](#-step-1-start-all-of-the-containers-)
   - [Step 2: Initialize the replica sets (config servers and shards)](#-step-2-initialize-the-replica-sets-config-servers-and-shards-)
   - [Step 3: Initializing the router](#-step-3-initializing-the-router-)
@@ -26,7 +26,7 @@ MongoDB (6.0.2) Sharded Cluster - Keyfile Authetication
 - [👌 Donate ^^](#-donate--)
 - [📚 Refrences](#-refrences-)
 
-### WARNING (Windows & OS X) 
+### 🚨 WARNING (Windows & OS X) 
 
 >The default Docker setup on Windows and OS X uses a VirtualBox VM to host the Docker daemon. 
 >Unfortunately, the mechanism VirtualBox uses to share folders between the host system and 
@@ -40,7 +40,7 @@ MongoDB (6.0.2) Sharded Cluster - Keyfile Authetication
 
 ---
 
-### Note: 
+### 📑 Note: 
 
 If you want to modify config files, on Windows you might need to save those file with EOL Conversion Unix (LF) mode. You can use notepad++ to do that [Edit menu => EOL Conversion => Unix](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png)
 
@@ -58,7 +58,7 @@ If you want to modify config files, on Windows you might need to save those file
 
 ## ✨ Steps [🔝](#-table-of-contents)
 
-### Preparing
+### 🔨 Preparing
 
 First, make sure that you cloned this repository and go to folder `with-keyfile-auth`, this folder contains authentication docker-compose (for this tutorial)
 
