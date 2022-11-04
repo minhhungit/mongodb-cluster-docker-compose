@@ -62,7 +62,7 @@ If you want to modify config files, on Windows you might need to save those file
 
 First, make sure that you cloned this repository and go to folder `with-keyfile-auth`, this folder contains authentication docker-compose (for this tutorial)
 
-Next, we need a keyfile to setup authetication, I already created a file (here)[https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/with-keyfile-auth/mongodb-build/auth]
+Next, we need a keyfile to setup authetication, I already created a file [here](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/with-keyfile-auth/mongodb-build/auth)
 If you want to use it for demo purpose then you can next to [Step 1: Start all of the containers](#-step-1-start-all-of-the-containers-)
 
 But if you want to create a key file for yourself, do as described below:
