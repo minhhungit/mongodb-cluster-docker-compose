@@ -42,7 +42,7 @@ Demo MongoDB (6.0.1) Sharded Cluster with Docker Compose
 
 ### Note: 
 
-If you want to modify config files, on Windows you might need to save those file with EOL Conversion Unix (LF) mode. You can use notepad++ to do that ((Edit menu => EOL Conversion => Unix (LF)))[https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png]
+If you want to modify config files, on Windows you might need to save those file with EOL Conversion Unix (LF) mode. You can use notepad++ to do that [Edit menu => EOL Conversion => Unix](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png)
 
 ---
 ## ❓ Mongo Components [🔝](#-table-of-contents)
@@ -74,7 +74,7 @@ chmod 400 mongodb-keyfile
 ```
 Read more here https://www.mongodb.com/docs/manual/tutorial/deploy-replica-set-with-keyfile-access-control/
 
-=> **If you are using Windows**, you can create keyfile using (Win32OpenSSL)[https://slproweb.com/products/Win32OpenSSL.html]
+=> **If you are using Windows**, you can create keyfile using [Win32OpenSSL](https://slproweb.com/products/Win32OpenSSL.html)
 
 Download Win32OpenSSL, install and run cmd/powershell/terminal as administrator:
 ```
@@ -82,7 +82,7 @@ cd C:\Program Files\OpenSSL-Win64\bin
 openssl rand -base64 700 > mongodb-keyfile
 ```
 
-After creating `mongodb-keyfile`, **remember** to move the file to folder `with-keyfile-auth\mongodb-build\auth\` and go to next step.
+After creating `mongodb-keyfile`, **remember** to replace your keyfile with my file in folder `with-keyfile-auth\mongodb-build\auth\` and go to next step.
 
 ### 👉 Step 1: Start all of the containers [🔝](#-table-of-contents)
 
@@ -118,7 +118,7 @@ If you get error like "E QUERY    [thread1] SyntaxError: unterminated string lit
 
 To fix it, modify script files in `scripts` folder, remove newline, change multi line to one line.
 
-Or you can save the file with Unix mode in notepad++ ((Edit menu => EOL Conversion => Unix (LF)))[https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png]
+Or you can save the file with Unix mode in notepad++ [Edit menu => EOL Conversion => Unix](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png)
 
 Link: https://stackoverflow.com/a/51728442/3007147
 
