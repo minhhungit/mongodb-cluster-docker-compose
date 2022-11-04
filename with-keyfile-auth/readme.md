@@ -1,7 +1,7 @@
 MongoDB (6.0.2) Sharded Cluster - Keyfile Authetication
 =========================================
 
-### Primary - Secondary - Secondary - w/ Keyfile Authetication
+### Primary - Secondary - Secondary - w/ 👉 Keyfile Authetication 👈
 
 ---
 
