@@ -131,7 +131,7 @@ docker-compose exec router01 sh -c "mongosh < /scripts/init-router.js"
 
 ### 👉 Step 4: Setup authentication
 
-Default account is `your_admin` / `your_password`
+Default account is `your_admin` / `your_password`, you can change it in `/scripts/auth.js` file, after run the file, you can delete it
 
 ```bash
 docker-compose exec configsvr01 bash "/scripts/auth.js"
