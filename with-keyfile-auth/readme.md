@@ -3,6 +3,11 @@ Demo MongoDB (6.0.1) Sharded Cluster with Docker Compose
 
 ### Primary - Secondary - Secondary - w/ Keyfile Authetication
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=minhhungit/mongodb-cluster-docker-compose&type=Date)](https://star-history.com/#minhhungit/mongodb-cluster-docker-compose&Date)
+
+
 ---
 
 ## 📖 Table of Contents
