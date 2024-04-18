@@ -7,6 +7,11 @@ Need PSS? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-comp
 
 ---
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=minhhungit/mongodb-cluster-docker-compose&type=Date)](https://star-history.com/#minhhungit/mongodb-cluster-docker-compose&Date)
+
+
 ### WARNING (Windows & OS X) 
 
 >The default Docker setup on Windows and OS X uses a VirtualBox VM to host the Docker daemon. 
