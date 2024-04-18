@@ -1,6 +1,11 @@
 MongoDB (6.0.1) Sharded Cluster with Docker Compose
 =========================================
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=minhhungit/mongodb-cluster-docker-compose&type=Date)](https://star-history.com/#minhhungit/mongodb-cluster-docker-compose&Date)
+
+
 ### PSS Style (Primary -Secondary - Secondary)
 
 - Need PSA? Check [here](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/PSA)
@@ -445,3 +450,4 @@ docker-compose down -v --rmi all --remove-orphans
 ## 📚 Refrences [🔝](#-table-of-contents)
 - https://github.com/jfollenfant/mongodb-sharding-docker-compose
 - https://viblo.asia/p/cai-dat-mongo-cluster-voi-docker-m68Z0NN25kG
+
