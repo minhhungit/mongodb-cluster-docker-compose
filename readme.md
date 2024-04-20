@@ -121,7 +121,7 @@ docker-compose exec router01 mongosh --port 27017
 sh.enableSharding("MyDatabase")
 
 // Setup shardingKey for collection `MyCollection`**
-db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { oemNumber: "hashed", zipCode: 1, supplierId: 1 } } )
+db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { oemNumber: "hashed", zipCode: 1, supplierId: 1 }, numInitialChunks: 3 } )
 
 ```
 
