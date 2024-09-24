@@ -1,4 +1,4 @@
-MongoDB (6.0.1) Sharded Cluster with Docker Compose
+MongoDB Sharded Cluster with Docker Compose
 =========================================
 
 ## Star History
