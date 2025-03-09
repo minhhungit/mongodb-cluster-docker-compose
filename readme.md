@@ -17,9 +17,8 @@ MongoDB Sharded Cluster with Docker Compose
 - [❓ Mongo Components?](#-mongo-components-)
 - [✨ Steps](#-steps-)
   - [Step 1: Start all of the containers](#-step-1-start-all-of-the-containers-)
-  - [Step 2: Initialize the replica sets (config servers and shards)](#-step-2-initialize-the-replica-sets-config-servers-and-shards-)
-  - [Step 3: Initializing the router](#-step-3-initializing-the-router-)
-  - [Step 4: Enable sharding and setup sharding-key](#-step-4-enable-sharding-and-setup-sharding-key-)
+  - [Step 2: Enable sharding and setup sharding-key](#-step-2-enable-sharding-and-setup-sharding-key-)
+  - [Notes](#-notes-)
 - [✅ Verify](#-verify-)
   - [Verify the status of the sharded cluster](#-verify-the-status-of-the-sharded-cluster-)
   - [Verify status of replica set for each shard](#-verify-status-of-replica-set-for-each-shard-)
@@ -75,45 +74,18 @@ Clone this repository, open powershell or cmd on the repo folder and run:
 docker-compose up -d
 ```
 
-If you get error "docker.errors.DockerException: Error while fetching server API version" and 
-used WSL (Windows Subsystem for Linux) need to enable 'WSL Integration' for required distro 
-in Windows Docker Desktop (Settings -> Resources-> WSL Integration -> Enable integration with required distros).
+The command will trigger some entrypoint files in `/scripts` folder to init shard cluster/replicas automatically...
 
-<img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/wsl2.png" style="width: 100%;" />
-
-Link: https://stackoverflow.com/a/65347214/3007147
-
-### 👉 Step 2: Initialize the replica sets (config servers and shards) [🔝](#-table-of-contents)
-
-Run these command one by one:
-
+### 👉 Step 2: Enable sharding and setup sharding-key [🔝](#-table-of-contents)
+After starting cluster with docker compose, you can verify its status (the initializing might take you 30 seconds - if it take too long, check container log of course :) )
 ```bash
-docker-compose exec configsvr01 sh -c "mongosh < /scripts/init-configserver.js"
-
-docker-compose exec shard01-a sh -c "mongosh < /scripts/init-shard01.js"
-docker-compose exec shard02-a sh -c "mongosh < /scripts/init-shard02.js"
-docker-compose exec shard03-a sh -c "mongosh < /scripts/init-shard03.js"
+while true; do docker exec -it router-01 bash -c "echo 'sh.status()' | mongosh --port 27017" && break || sleep 2; done
 ```
 
-If you get error like "E QUERY    [thread1] SyntaxError: unterminated string literal @(shellhelp2)", problem maybe due to:
+Check more at this step [✅ Verify](#-verify-))
 
->On Unix, you will get this error if your script has Dos/Windows end of lines (CRLF) instead of Unix end of lines (LF).
 
-To fix it, modify script files in `scripts` folder, remove newline, change multi line to one line.
-
-Or save the file with Unix mode in notepad++ [Edit menu => EOL Conversion => Unix](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png)
-
-Link: https://stackoverflow.com/a/51728442/3007147
-
-### 👉 Step 3: Initializing the router [🔝](#-table-of-contents)
-
->Note: Wait a bit for the config server and shards to elect their primaries before initializing the router
-
-```bash
-docker-compose exec router01 sh -c "mongosh < /scripts/init-router.js"
-```
-
-### 👉 Step 4: Enable sharding and setup sharding-key [🔝](#-table-of-contents)
+Then enable sharding/sharding key for your database:
 ```bash
 docker-compose exec router01 mongosh --port 27017
 
@@ -127,8 +99,6 @@ db.adminCommand( { shardCollection: "MyDatabase.MyCollection", key: { oemNumber:
 
 ---
 ### ✔️ Done !!!
-#### But before you start inserting data you should verify them first
-
 Btw, here is mongodb connection string if you want to try to connect mongodb cluster with MongoDB Compass from your host computer (which is running docker)
 
 ```
@@ -138,6 +108,26 @@ mongodb://127.0.0.1:27117,127.0.0.1:27118
 And if you are .NET developer there is a sample READ/WRITE data in mongodb cluster here: [https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/client](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/client)
 
 ---
+
+### Notes
+If you get error "docker.errors.DockerException: Error while fetching server API version" and 
+used WSL (Windows Subsystem for Linux) need to enable 'WSL Integration' for required distro 
+in Windows Docker Desktop (Settings -> Resources-> WSL Integration -> Enable integration with required distros).
+
+<img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/wsl2.png" style="width: 100%;" />
+
+Link: https://stackoverflow.com/a/65347214/3007147
+
+
+If you get error like "E QUERY    [thread1] SyntaxError: unterminated string literal @(shellhelp2)", problem maybe due to:
+
+>On Unix, you will get this error if your script has Dos/Windows end of lines (CRLF) instead of Unix end of lines (LF).
+
+To fix it, modify script files in `scripts` folder, remove newline, change multi line to one line.
+
+Or save the file with Unix mode in notepad++ [Edit menu => EOL Conversion => Unix](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/master/assets/EOL-unix-mode.png)
+
+Link: https://stackoverflow.com/a/51728442/3007147
 
 ## 📋 Verify [🔝](#-table-of-contents)
 
