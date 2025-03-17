@@ -18,7 +18,7 @@ MongoDB Sharded Cluster with Docker Compose
 - [✨ Install](#-install-)
   - [On-liner command](#on-liner-command)
   - [Manual step by step](#manual-step-by-step)
-- [✨ Enable sharding/sharding key for your database](#-enable-sharding-sharding-key-for-your-database-)
+- [✨ Enable sharding/sharding key for your database](#enable-shardingsharding-key-for-your-database-)
 - [✅ Verify](#-verify-)
   - [Verify the status of the sharded cluster](#-verify-the-status-of-the-sharded-cluster-)
   - [Verify status of replica set for each shard](#-verify-status-of-replica-set-for-each-shard-)
@@ -98,7 +98,7 @@ while true; do docker exec -it router-01 bash -c "echo 'sh.status()' | mongosh -
 - Check more at this step [✅ Verify](#-verify-))
 
 
-### Enable sharding/sharding key for your database [🔝](#-table-of-contents)
+### ✨ Enable sharding/sharding key for your database [🔝](#-table-of-contents)
 ```bash
 docker-compose exec router01 mongosh --port 27017
 
