@@ -18,6 +18,7 @@ MongoDB Sharded Cluster with Docker Compose
 - [✨ Install](#-install-)
   - [On-liner command](#on-liner-command)
   - [Manual step by step](#manual-step-by-step)
+- [✨ Enable sharding/sharding key for your database](#-enable-sharding-sharding-key-for-your-database-)
 - [✅ Verify](#-verify-)
   - [Verify the status of the sharded cluster](#-verify-the-status-of-the-sharded-cluster-)
   - [Verify status of replica set for each shard](#-verify-status-of-replica-set-for-each-shard-)
@@ -83,7 +84,7 @@ docker-compose up -d
 
 The command will trigger some entrypoint files in `/scripts` folder to init shard cluster/replicas automatically...
 
-#### 👉 Verify, enable sharding and setup sharding-key [🔝](#-table-of-contents)
+#### 👉 Verify
 1. Check Cluster Initialization:
 - After starting the cluster, it may take approximately 30 seconds for initialization.
 - If the process takes longer, inspect the container logs for troubleshooting.
@@ -97,7 +98,7 @@ while true; do docker exec -it router-01 bash -c "echo 'sh.status()' | mongosh -
 - Check more at this step [✅ Verify](#-verify-))
 
 
-==> Then enable sharding/sharding key for your database:
+### Enable sharding/sharding key for your database [🔝](#-table-of-contents)
 ```bash
 docker-compose exec router01 mongosh --port 27017
 
