@@ -15,10 +15,9 @@ MongoDB Sharded Cluster with Docker Compose
 
 ## 📖 Table of Contents
 - [❓ Mongo Components?](#-mongo-components-)
-- [✨ Steps](#-steps-)
-  - [Step 1: Start all of the containers](#-step-1-start-all-of-the-containers-)
-  - [Step 2: Enable sharding and setup sharding-key](#-step-2-enable-sharding-and-setup-sharding-key-)
-  - [One-Liner command](#-one-liner-command)
+- [✨ Install](#-install-)
+  - [On-liner command](#-one-liner-command)
+  - [Manual step by step](#-manual-step-by-step-)
   - [Notes](#-notes-)
 - [✅ Verify](#-verify-)
   - [Verify the status of the sharded cluster](#-verify-the-status-of-the-sharded-cluster-)
@@ -62,9 +61,15 @@ If you want to modify config files, on Windows you might need to save those file
 
 <img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/sharding-and-replica-sets.png" style="width: 100%;" />
 
-## ✨ Steps [🔝](#-table-of-contents)
+### On-liner command
+For convenience, you can combine both steps into a single command, 
+```bash
+docker-compose up -d && while true; do docker exec -it router-01 bash -c "echo 'sh.status()' | mongosh --port 27017" && break || sleep 2; done
+```
 
-### 👉 Step 1: Start all of the containers [🔝](#-table-of-contents)
+### Manual step by step
+
+### 👉 Start all of the containers
 
 > I have to remind again in case you missed 😊
 > If you need to set cluster with keyfile authentication, [check here](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/Feature/Auth/with-keyfile-auth)
@@ -72,12 +77,12 @@ If you want to modify config files, on Windows you might need to save those file
 Clone this repository, open powershell or cmd on the repo folder and run:
 
 ```bash
-docker-compose up -d && while true; do docker exec -it router-01 bash -c "echo 'sh.status()' | mongosh --port 27017" && break || sleep 2; done
+docker-compose up -d
 ```
 
 The command will trigger some entrypoint files in `/scripts` folder to init shard cluster/replicas automatically...
 
-### 👉 Step 2: Enable sharding and setup sharding-key [🔝](#-table-of-contents)
+### 👉 Verify, enable sharding and setup sharding-key [🔝](#-table-of-contents)
 1. Check Cluster Initialization:
 - After starting the cluster, it may take approximately 30 seconds for initialization.
 - If the process takes longer, inspect the container logs for troubleshooting.
@@ -90,13 +95,8 @@ while true; do docker exec -it router-01 bash -c "echo 'sh.status()' | mongosh -
 - It retries every 2 seconds until the status is successfully retrieved.
 - Check more at this step [✅ Verify](#-verify-))
 
-### 👉 One-Liner Command
-For convenience, you can combine both steps into a single command:
-```bash
-docker-compose up -d && while true; do docker exec -it router-01 bash -c "echo 'sh.status()' | mongosh --port 27017" && break || sleep 2; done
-```
 
-Then enable sharding/sharding key for your database:
+==> Then enable sharding/sharding key for your database:
 ```bash
 docker-compose exec router01 mongosh --port 27017
 
