@@ -18,7 +18,7 @@ MongoDB Sharded Cluster with Docker Compose
 - [✨ Steps](#-steps-)
   - [Step 1: Start all of the containers](#-step-1-start-all-of-the-containers-)
   - [Step 2: Enable sharding and setup sharding-key](#-step-2-enable-sharding-and-setup-sharding-key-)
-  - [One-Liner command](#-one-liner-command-)
+  - [One-Liner command](#-one-liner-command)
   - [Notes](#-notes-)
 - [✅ Verify](#-verify-)
   - [Verify the status of the sharded cluster](#-verify-the-status-of-the-sharded-cluster-)
