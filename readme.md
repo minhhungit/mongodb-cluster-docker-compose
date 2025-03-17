@@ -63,8 +63,8 @@ If you want to modify config files, on Windows you might need to save those file
 
 ## ✨ Install [🔝](#-table-of-contents)
 
-### 👉 On-liner command
-For convenience, you can combine both steps into a single command, 
+### 👉 On-liner command (convenience)
+Clone this repository, open powershell or cmd on the repo folder and run:
 ```bash
 docker-compose up -d && while true; do docker exec -it router-01 bash -c "echo 'sh.status()' | mongosh --port 27017" && break || sleep 2; done
 ```
