@@ -16,9 +16,8 @@ MongoDB Sharded Cluster with Docker Compose
 ## 📖 Table of Contents
 - [❓ Mongo Components?](#-mongo-components-)
 - [✨ Install](#-install-)
-  - [On-liner command](#-one-liner-command)
-  - [Manual step by step](#-manual-step-by-step-)
-  - [Notes](#-notes-)
+  - [On-liner command](#on-liner-command)
+  - [Manual step by step](#manual-step-by-step)
 - [✅ Verify](#-verify-)
   - [Verify the status of the sharded cluster](#-verify-the-status-of-the-sharded-cluster-)
   - [Verify status of replica set for each shard](#-verify-status-of-replica-set-for-each-shard-)
@@ -61,6 +60,8 @@ If you want to modify config files, on Windows you might need to save those file
 
 <img src="https://raw.githubusercontent.com/minhhungit/mongodb-cluster-docker-compose/master/images/sharding-and-replica-sets.png" style="width: 100%;" />
 
+## ✨ Install [🔝](#-table-of-contents)
+
 ### On-liner command
 For convenience, you can combine both steps into a single command, 
 ```bash
@@ -69,7 +70,7 @@ docker-compose up -d && while true; do docker exec -it router-01 bash -c "echo '
 
 ### Manual step by step
 
-### 👉 Start all of the containers
+#### 👉 Start all of the containers
 
 > I have to remind again in case you missed 😊
 > If you need to set cluster with keyfile authentication, [check here](https://github.com/minhhungit/mongodb-cluster-docker-compose/tree/Feature/Auth/with-keyfile-auth)
@@ -82,7 +83,7 @@ docker-compose up -d
 
 The command will trigger some entrypoint files in `/scripts` folder to init shard cluster/replicas automatically...
 
-### 👉 Verify, enable sharding and setup sharding-key [🔝](#-table-of-contents)
+#### 👉 Verify, enable sharding and setup sharding-key [🔝](#-table-of-contents)
 1. Check Cluster Initialization:
 - After starting the cluster, it may take approximately 30 seconds for initialization.
 - If the process takes longer, inspect the container logs for troubleshooting.
