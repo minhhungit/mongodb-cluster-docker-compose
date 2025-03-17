@@ -1,4 +1,4 @@
-MongoDB Sharded Cluster with Docker Compose
+MongoDB [Auto Init] Sharded Cluster with Docker Compose
 =========================================
 
 ## Star History
