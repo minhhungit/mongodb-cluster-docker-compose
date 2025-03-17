@@ -18,6 +18,7 @@ MongoDB Sharded Cluster with Docker Compose
 - [✨ Steps](#-steps-)
   - [Step 1: Start all of the containers](#-step-1-start-all-of-the-containers-)
   - [Step 2: Enable sharding and setup sharding-key](#-step-2-enable-sharding-and-setup-sharding-key-)
+  - [One-Liner command](#-one-liner-command-)
   - [Notes](#-notes-)
 - [✅ Verify](#-verify-)
   - [Verify the status of the sharded cluster](#-verify-the-status-of-the-sharded-cluster-)
@@ -71,19 +72,29 @@ If you want to modify config files, on Windows you might need to save those file
 Clone this repository, open powershell or cmd on the repo folder and run:
 
 ```bash
-docker-compose up -d
+docker-compose up -d && while true; do docker exec -it router-01 bash -c "echo 'sh.status()' | mongosh --port 27017" && break || sleep 2; done
 ```
 
 The command will trigger some entrypoint files in `/scripts` folder to init shard cluster/replicas automatically...
 
 ### 👉 Step 2: Enable sharding and setup sharding-key [🔝](#-table-of-contents)
-After starting cluster with docker compose, you can verify its status (the initializing might take you 30 seconds - if it take too long, check container log of course :) )
+1. Check Cluster Initialization:
+- After starting the cluster, it may take approximately 30 seconds for initialization.
+- If the process takes longer, inspect the container logs for troubleshooting.
+2. Run Verification Command: Use the following command to verify the sharding status:
 ```bash
 while true; do docker exec -it router-01 bash -c "echo 'sh.status()' | mongosh --port 27017" && break || sleep 2; done
 ```
 
-Check more at this step [✅ Verify](#-verify-))
+- This command continuously checks the sharding status using sh.status() on the router-01 container.
+- It retries every 2 seconds until the status is successfully retrieved.
+- Check more at this step [✅ Verify](#-verify-))
 
+### 👉 One-Liner Command
+For convenience, you can combine both steps into a single command:
+```bash
+docker-compose up -d && while true; do docker exec -it router-01 bash -c "echo 'sh.status()' | mongosh --port 27017" && break || sleep 2; done
+```
 
 Then enable sharding/sharding key for your database:
 ```bash
